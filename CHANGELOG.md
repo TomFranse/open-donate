@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-01-02
+
+### Added
+
+- Card-based setup dashboard replacing sequential stepper
+- Reusable base Card component in `@common/Card` with MUI-standard styling
+- Dynamic CSS Grid layout for cards (auto-fit based on available space)
+- Per-section status tracking (not-started, in-progress, completed, skipped)
+- Setup sections can be configured independently in any order
+- Finish Setup feature that removes unused code based on enabled features
+- Setup state migration from old localStorage flags to new structure
+- MUI Dialog-based configuration for each setup section
+- Progress indicator showing completion status
+
+### Changed
+
+- Setup page redesigned from sequential stepper to card-based dashboard
+- All setup sections are now optional (removed "Optional" labels)
+- Cards use playing card proportions (max-width: 400px) with increased border radius
+- Cards have increased internal padding (24px) for better spacing
+- Grid layout uses CSS Grid with auto-fit for dynamic column distribution
+- Setup completion is now irreversible and triggers cleanup of unused code
+- App routing updated to allow access anytime (setup no longer forces redirect)
+
+### Technical
+
+- Created `SetupSectionsState` type for per-section status tracking
+- Added `getSetupSectionsState()` and `updateSetupSectionStatus()` utilities
+- Added `migrateOldSetupState()` for backward compatibility
+- Added `getEnabledFeatures()` for cleanup script
+- Created `finish-setup.js` script for removing unused feature code
+- Added `/api/finish-setup` endpoint in Vite plugin
+- Base Card component with configurable elevation and hover effects
+- Setup sections split into separate components (SupabaseSection, AirtableSection, etc.)
+- SetupCard and SetupDialog base components for reusable patterns
+
 ## [0.4.0] - 2026-01-02
 
 ### Added

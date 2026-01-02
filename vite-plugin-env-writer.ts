@@ -1,15 +1,72 @@
 import type { Plugin } from "vite";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
 /**
- * Vite plugin that adds a dev-only API endpoint to write environment variables to .env file
- * This is safe because it only works in dev mode and only writes to .env
+ * Vite plugin that adds dev-only API endpoints
+ * - /api/write-env: Write environment variables to .env file
+ * - /api/finish-setup: Finish setup and clean up unused code
  */
 export function envWriterPlugin(): Plugin {
   return {
     name: "env-writer",
     configureServer(server) {
+      // Finish setup endpoint
+      server.middlewares.use("/api/finish-setup", async (req, res, next) => {
+        // Only allow POST requests
+        if (req.method !== "POST") {
+          res.writeHead(405, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Method not allowed" }));
+          return;
+        }
+
+        let body = "";
+        req.on("data", (chunk) => {
+          body += chunk.toString();
+        });
+
+        req.on("end", async () => {
+          try {
+            const { enabledFeatures = [] } = JSON.parse(body) as { enabledFeatures: string[] };
+
+            // Import and run the finish-setup script
+            const finishSetupPath = path.resolve(process.cwd(), "scripts/finish-setup.js");
+            if (!fs.existsSync(finishSetupPath)) {
+              throw new Error("finish-setup.js not found");
+            }
+
+            // Use dynamic import with file:// URL
+            const fileUrl = `file://${finishSetupPath.replace(/\\/g, "/")}`;
+            const finishSetupModule = await import(fileUrl);
+            
+            if (typeof finishSetupModule.finishSetup !== "function") {
+              throw new Error("finishSetup function not found in module");
+            }
+
+            const result = finishSetupModule.finishSetup(enabledFeatures);
+
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                success: true,
+                message: "Setup finished successfully",
+                removed: result.removed,
+              })
+            );
+          } catch (error) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                error: "Failed to finish setup",
+                message: error instanceof Error ? error.message : String(error),
+              })
+            );
+          }
+        });
+      });
+
+      // Write env endpoint
       server.middlewares.use("/api/write-env", (req, res, next) => {
         // Only allow POST requests
         if (req.method !== "POST") {

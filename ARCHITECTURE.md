@@ -11,6 +11,7 @@ src/
 │       └── global.css
 ├── common/              # Reusable UI components (pure components)
 │   ├── Button/
+│   ├── Card/
 │   ├── Input/
 │   └── Modal/
 ├── components/          # App-level components (ProfileMenu, ProtectedRoute, etc.)
@@ -288,6 +289,8 @@ Path aliases are configured in `tsconfig.app.json` and `vite.config.ts`:
 
 - `@/*` → `src/*`
 - `@common/*` → `src/common/*`
+- `@components/*` → `src/components/*`
+- `@config/*` → `src/config/*`
 - `@features/*` → `src/features/*`
 - `@layouts/*` → `src/layouts/*`
 - `@pages/*` → `src/pages/*`
