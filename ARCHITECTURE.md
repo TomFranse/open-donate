@@ -14,7 +14,7 @@ src/
 │   ├── Card/
 │   ├── Input/
 │   └── Modal/
-├── components/          # App-level components (ProfileMenu, ProtectedRoute, etc.)
+├── components/          # App-level components (Topbar, ProfileMenu, ProtectedRoute, etc.)
 ├── config/              # Configuration files (Entreefederatie, etc.)
 ├── features/            # Feature modules (business logic)
 │   ├── auth/
@@ -53,6 +53,7 @@ Pages → Components → Hooks → Services → Shared Services
 4. **Services** can import from: Shared services, Types
 5. **Common components** cannot import from features
 6. **Components** cannot import from services directly (use hooks)
+7. **Topbar** is a root-level component that is always visible (rendered in App.tsx)
 
 ### Import Patterns
 

@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Box, useTheme } from "@mui/material";
 import { AuthProvider } from "@store/contexts/AuthContext";
+import { Topbar } from "@components/Topbar";
 import { MainLayout } from "@layouts/MainLayout";
 import { AuthLayout } from "@layouts/AuthLayout";
 import { HomePage } from "@pages/HomePage";
@@ -10,10 +12,17 @@ import { SetupPage } from "@pages/SetupPage";
 import { AuthCallbackPage } from "@pages/AuthCallbackPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
-function App() {
+function AppContent() {
+  const theme = useTheme();
+
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <>
+      <Topbar />
+      <Box
+        sx={{
+          pt: `${theme.mixins.toolbar.minHeight}px`,
+        }}
+      >
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
@@ -34,6 +43,16 @@ function App() {
           <Route path="/setup" element={<SetupPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+      </Box>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppContent />
       </BrowserRouter>
     </AuthProvider>
   );

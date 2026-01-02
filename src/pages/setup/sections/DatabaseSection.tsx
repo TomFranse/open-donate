@@ -29,8 +29,8 @@ export const DatabaseCard = ({ onStatusChange }: DatabaseSectionProps) => {
   return (
     <>
       <SetupCard
-        title="Set Up Database"
-        description="Create the todos table in your Supabase database. Required for the todos feature with Supabase."
+        title="Create Database Tables"
+        description="Run SQL migrations to create the todos table in your Supabase database. Only needed if you want cloud-synced todos. Requires Supabase to be configured first."
         status={status}
         onClick={() => setDialogOpen(true)}
       />
@@ -94,14 +94,14 @@ const DatabaseDialog = ({ open, onClose, onStatusChange }: DatabaseDialogProps) 
       open={open}
       onClose={onClose}
       onSave={handleSave}
-      title="Set Up Database Schema"
+      title="Create Database Tables"
       saveButtonText="Mark as Complete"
     >
       <Box>
         <Typography variant="body2" color="text.secondary" paragraph>
-          This boilerplate includes a todos feature that requires a database table. If you only want
-          to test authentication, you can skip this step. Run this SQL in your Supabase SQL Editor
-          when you're ready to use the todos feature:
+          To enable cloud-synced todos that work across devices, you need to create the database table
+          in your Supabase project. Copy the SQL below and run it in your Supabase SQL Editor. If you
+          only need authentication or prefer browser storage for todos, you can skip this step.
         </Typography>
 
         <Card variant="outlined" sx={{ my: 3 }}>
@@ -114,7 +114,7 @@ const DatabaseDialog = ({ open, onClose, onStatusChange }: DatabaseDialogProps) 
                 mb: 2,
               }}
             >
-              <Typography variant="subtitle2">SQL Migration</Typography>
+              <Typography variant="subtitle2">SQL Migration Script</Typography>
               <Button
                 startIcon={<ContentCopy />}
                 onClick={handleCopySQL}
@@ -141,24 +141,33 @@ const DatabaseDialog = ({ open, onClose, onStatusChange }: DatabaseDialogProps) 
         </Card>
 
         <Alert severity="info" sx={{ mb: 2 }}>
-          <Typography variant="body2">
-            <strong>How to run this SQL:</strong>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            <strong>How to run this SQL migration:</strong>
           </Typography>
           <List dense>
             <ListItem>
               <ListItemText
-                primary="1. Go to your Supabase project dashboard"
-                secondary="Navigate to SQL Editor in the left sidebar"
+                primary="1. Open your Supabase project dashboard"
+                secondary="Make sure you've completed the 'Connect to Supabase' step first"
               />
             </ListItem>
             <ListItem>
               <ListItemText
-                primary="2. Create a new query"
-                secondary="Click 'New query' and paste the SQL above"
+                primary="2. Navigate to SQL Editor"
+                secondary="Click 'SQL Editor' in the left sidebar, then 'New query'"
               />
             </ListItem>
             <ListItem>
-              <ListItemText primary="3. Run the query" secondary="Click 'Run' to execute the SQL" />
+              <ListItemText
+                primary="3. Paste and run the SQL"
+                secondary="Paste the SQL above and click 'Run' to create the todos table"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="4. Mark as complete"
+                secondary="After running the SQL successfully, click 'Mark as Complete' below"
+              />
             </ListItem>
           </List>
         </Alert>

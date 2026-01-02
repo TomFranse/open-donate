@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-01-02
+
+### Added
+
+- Permanent Topbar component that is always visible across all routes
+- Reusable Topbar component (`src/components/Topbar.tsx`) designed for use across all apps
+- Improved user-facing text in setup cards for better clarity
+
+### Changed
+
+- Topbar is now permanently visible (no longer conditional on Supabase configuration)
+- Improved setup card descriptions to better communicate functionality:
+  - "Configure Supabase" → "Connect to Supabase" with clearer description
+  - "Set Up Database" → "Create Database Tables" with clearer description
+- MainLayout simplified (removed duplicate AppBar, Topbar handles navigation)
+- AuthLayout adjusted to account for permanent topbar
+
+### Technical
+
+- Created `Topbar` component with fixed positioning
+- App.tsx restructured to include Topbar at root level
+- Removed conditional topbar logic - now always visible
+- Updated padding calculations to account for permanent topbar
+
 ## [0.5.0] - 2026-01-02
 
 ### Added

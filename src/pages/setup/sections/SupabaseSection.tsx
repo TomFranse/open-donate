@@ -20,8 +20,8 @@ export const SupabaseCard = ({ onStatusChange }: SupabaseSectionProps) => {
   return (
     <>
       <SetupCard
-        title="Configure Supabase"
-        description="Set up Supabase for authentication and database features. Recommended for production apps."
+        title="Connect to Supabase"
+        description="Enter your Supabase project credentials to enable authentication and cloud database features. This step is required before setting up database tables."
         status={status}
         onClick={() => setDialogOpen(true)}
       />
@@ -136,14 +136,15 @@ VITE_SUPABASE_PUBLISHABLE_KEY=${supabaseKey}
       open={open}
       onClose={onClose}
       onSave={handleSave}
-      title="Configure Supabase Credentials"
+      title="Connect to Supabase"
       saveButtonText={testResult?.success && envWritten ? "Save" : "Test & Save"}
       saveButtonDisabled={!supabaseUrl || !supabaseKey || testing || writingEnv}
     >
       <Box>
         <Typography variant="body2" color="text.secondary" paragraph>
-          You can configure Supabase to enable authentication and database features. If you don't
-          have a Supabase project yet,{" "}
+          Enter your Supabase project URL and publishable key to connect your app. This enables user
+          authentication and allows you to use cloud database features. If you don't have a Supabase
+          project yet,{" "}
           <Typography
             component="a"
             href="https://supabase.com"
@@ -153,7 +154,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=${supabaseKey}
           >
             create a free account
           </Typography>
-          . You can also skip this step and configure it later.
+          . You can skip this step and configure it later if you prefer to use browser storage for now.
         </Typography>
 
         <Box sx={{ my: 3 }}>
