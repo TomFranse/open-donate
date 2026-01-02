@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.5] - 2026-01-02
+
+### Fixed
+
+- Fixed anonymous users being displayed as signed-in users in the UI
+- Anonymous users now correctly show sign-in options instead of user profile and sign-out button
+- Anonymous users are properly filtered out in all authentication code paths
+
+### Changed
+
+- Updated anonymous user detection to use Supabase's official `is_anonymous` property instead of custom metadata checks
+- Refactored user conversion logic into shared utility functions for consistency
+
+### Technical
+
+- Created `src/features/auth/utils/userUtils.ts` with shared utility functions:
+  - `isAnonymousUser()` - Checks Supabase's official `is_anonymous` property
+  - `supabaseUserToUser()` - Converts Supabase user to app User interface, filtering anonymous users
+- Updated `useAuth.ts` hook to use shared utility functions
+- Updated `authService.ts` functions (`login()`, `signUp()`, `getCurrentUser()`) to filter anonymous users
+- All code paths now consistently use Supabase's recommended approach for anonymous user detection
+- Type-safe implementation using official Supabase `User` type from `@supabase/supabase-js`
+
 ## [0.5.4] - 2026-01-03
 
 ### Added

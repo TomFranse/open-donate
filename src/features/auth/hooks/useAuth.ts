@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { getSupabase, isSupabaseConfigured } from "@shared/services/supabaseService";
 import * as authService from "../services/authService";
 import type { User, LoginCredentials, SignUpCredentials } from "../types/auth.types";
+import { supabaseUserToUser } from "../utils/userUtils";
 
 interface UseAuthReturn {
   user: User | null;
@@ -28,37 +29,6 @@ const isOAuthRedirectInProgress = (): boolean => {
   const hasAccessTokenInHash = hash.includes("access_token") || hash.includes("refresh_token");
 
   return hasCode || hasError || hasAccessTokenInHash;
-};
-
-/**
- * Converts Supabase user to our User interface
- */
-const supabaseUserToUser = (
-  supabaseUser: {
-    id: string;
-    email?: string | null;
-    created_at?: string;
-    app_metadata?: { provider?: string };
-    identities?: Array<{ provider?: string }>;
-  } | null
-): User | null => {
-  if (!supabaseUser) return null;
-
-  // Check if this is an anonymous user
-  const isAnonymous =
-    supabaseUser.app_metadata?.provider === "anonymous" ||
-    supabaseUser.identities?.some((id) => id.provider === "anonymous");
-
-  // Anonymous users are treated as not logged in
-  if (isAnonymous) {
-    return null;
-  }
-
-  return {
-    id: supabaseUser.id,
-    email: supabaseUser.email || "",
-    created_at: supabaseUser.created_at,
-  };
 };
 
 export const useAuth = (): UseAuthReturn => {

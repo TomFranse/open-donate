@@ -77,7 +77,8 @@ features/[feature-name]/
 ├── components/      # UI components specific to this feature
 ├── hooks/          # React hooks that use services
 ├── services/       # Pure functions, API calls, business logic
-└── types/          # TypeScript types for this feature
+├── types/          # TypeScript types for this feature
+└── utils/          # Feature-specific utility functions (optional)
 ```
 
 ### Example: Auth Feature
@@ -135,6 +136,7 @@ export const LoginPage = () => {
 | React hook with state | `features/[feature]/hooks/` |
 | Pure function, API call | `features/[feature]/services/` |
 | TypeScript types | `features/[feature]/types/` |
+| Feature-specific utility function | `features/[feature]/utils/` |
 | Route-level component | `pages/` |
 | Layout wrapper | `layouts/` |
 | Global state (Context) | `store/contexts/` |

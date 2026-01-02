@@ -1,6 +1,7 @@
 import { getSupabase, isSupabaseConfigured } from "@shared/services/supabaseService";
 import { getEntreefederatieDomain } from "@config/entreefederatie";
 import type { User, LoginCredentials, SignUpCredentials } from "../types/auth.types";
+import { supabaseUserToUser } from "../utils/userUtils";
 
 export const login = async (
   credentials: LoginCredentials
@@ -24,13 +25,8 @@ export const login = async (
       return { user: null, error };
     }
 
-    const user: User | null = data.user
-      ? {
-          id: data.user.id,
-          email: data.user.email || "",
-          created_at: data.user.created_at,
-        }
-      : null;
+    // Filter out anonymous users using shared utility
+    const user = supabaseUserToUser(data.user);
 
     return { user, error: null };
   } catch (error) {
@@ -63,13 +59,8 @@ export const signUp = async (
       return { user: null, error };
     }
 
-    const user: User | null = data.user
-      ? {
-          id: data.user.id,
-          email: data.user.email || "",
-          created_at: data.user.created_at,
-        }
-      : null;
+    // Filter out anonymous users using shared utility
+    const user = supabaseUserToUser(data.user);
 
     return { user, error: null };
   } catch (error) {
@@ -114,13 +105,8 @@ export const getCurrentUser = async (): Promise<{
       return { user: null, error };
     }
 
-    const user: User | null = authUser
-      ? {
-          id: authUser.id,
-          email: authUser.email || "",
-          created_at: authUser.created_at,
-        }
-      : null;
+    // Filter out anonymous users using shared utility
+    const user = supabaseUserToUser(authUser);
 
     return { user, error: null };
   } catch (error) {
