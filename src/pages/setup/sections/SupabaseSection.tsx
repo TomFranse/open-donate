@@ -154,7 +154,8 @@ VITE_SUPABASE_PUBLISHABLE_KEY=${supabaseKey}
           >
             create a free account
           </Typography>
-          . You can skip this step and configure it later if you prefer to use browser storage for now.
+          . You can skip this step and configure it later if you prefer to use browser storage for
+          now.
         </Typography>
 
         <Box sx={{ my: 3 }}>

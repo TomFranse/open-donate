@@ -6,9 +6,7 @@ This document explains the architectural decisions and rules enforced in this bo
 
 ```
 src/
-├── assets/              # Static assets (images, global CSS)
-│   └── styles/
-│       └── global.css
+├── assets/              # Static assets (images, etc.)
 ├── common/              # Reusable UI components (pure components)
 │   ├── Button/
 │   ├── Card/

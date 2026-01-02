@@ -1,5 +1,5 @@
 import { Box, Container, Typography, Paper } from "@mui/material";
-import { ProfileMenu } from "@components/ProfileMenu";
+import { ProfileMenu } from "../components/ProfileMenu";
 
 /**
  * LoginPage displays the ProfileMenu for sign-in.

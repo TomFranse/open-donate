@@ -99,9 +99,10 @@ const DatabaseDialog = ({ open, onClose, onStatusChange }: DatabaseDialogProps) 
     >
       <Box>
         <Typography variant="body2" color="text.secondary" paragraph>
-          To enable cloud-synced todos that work across devices, you need to create the database table
-          in your Supabase project. Copy the SQL below and run it in your Supabase SQL Editor. If you
-          only need authentication or prefer browser storage for todos, you can skip this step.
+          To enable cloud-synced todos that work across devices, you need to create the database
+          table in your Supabase project. Copy the SQL below and run it in your Supabase SQL Editor.
+          If you only need authentication or prefer browser storage for todos, you can skip this
+          step.
         </Typography>
 
         <Card variant="outlined" sx={{ my: 3 }}>

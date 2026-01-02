@@ -8,12 +8,16 @@ import {
   Divider,
   IconButton,
   Tooltip,
+  CircularProgress,
+  Chip,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import { useAuthContext } from "@store/contexts/AuthContext";
 import { isSupabaseConfigured } from "@shared/services/supabaseService";
+import { useUserProfile } from "@features/auth/hooks/useUserProfile";
 
 interface ProfileMenuProps {
   anchorEl?: HTMLElement | null;
@@ -29,6 +33,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   onClose: externalOnClose,
 }) => {
   const { user, signInWithGoogle, signInWithEntreefederatie, logout } = useAuthContext();
+  const { profile, loading: profileLoading } = useUserProfile(user);
   const [internalAnchorEl, setInternalAnchorEl] = useState<HTMLElement | null>(null);
   const supabaseConfigured = isSupabaseConfigured();
 
@@ -51,13 +56,6 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   }, [externalOnClose]);
 
   const handleSignIn = useCallback(() => {
-    // Capture click timestamp for user-activation timing diagnostics
-    try {
-      (window as unknown as { __authClickT0?: number }).__authClickT0 = performance.now();
-    } catch {
-      // Ignore
-    }
-
     // Call sign-in first to keep user gesture context active
     void signInWithGoogle();
     // Close the menu afterwards to avoid losing focus/activation before popup
@@ -65,13 +63,6 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   }, [signInWithGoogle, handleClose]);
 
   const handleSignInEntreefederatie = useCallback(() => {
-    // Capture click timestamp for user-activation timing diagnostics
-    try {
-      (window as unknown as { __authClickT0?: number }).__authClickT0 = performance.now();
-    } catch {
-      // Ignore
-    }
-
     // Call sign-in first to keep user gesture context active
     void signInWithEntreefederatie();
     // Close the menu afterwards to avoid losing focus/activation before popup
@@ -86,6 +77,38 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   const isLoggedIn = user !== null;
   const entreefederatieEnabled = true; // Can be made configurable later
 
+  // Helper functions to get display information
+  const getDisplayName = () => {
+    if (profile?.display_name) return profile.display_name;
+    if (user?.email) return user.email;
+    return "User";
+  };
+
+  const getAvatarInitial = () => {
+    if (profile?.display_name) {
+      return profile.display_name.charAt(0).toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return null;
+  };
+
+  const getAvatarUrl = () => {
+    return profile?.photo_url || null;
+  };
+
+  const getRoleDisplay = () => {
+    if (!profile?.role || profile.role === "anonymous") return null;
+    const roleLabels: Record<string, string> = {
+      free: "Free",
+      premium: "Premium",
+      admin: "Admin",
+      "super-admin": "Super Admin",
+    };
+    return roleLabels[profile.role] || profile.role;
+  };
+
   // If no external anchor, render the trigger button
   if (!externalAnchorEl) {
     return (
@@ -99,8 +122,11 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>
-              {isLoggedIn && user.email ? user.email.charAt(0).toUpperCase() : <PersonIcon />}
+            <Avatar
+              src={isLoggedIn ? getAvatarUrl() || undefined : undefined}
+              sx={{ width: 32, height: 32 }}
+            >
+              {isLoggedIn && getAvatarInitial() ? getAvatarInitial() : <PersonIcon />}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -122,63 +148,120 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
           }}
         >
           {isLoggedIn ? (
-            <>
-              <Box sx={{ px: 2, py: 1.5 }}>
+            [
+              <Box key="profile-info" sx={{ px: 2, py: 1.5 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Avatar sx={{ width: 40, height: 40 }}>
-                    {user.email ? user.email.charAt(0).toUpperCase() : <PersonIcon />}
+                  <Avatar src={getAvatarUrl() || undefined} sx={{ width: 40, height: 40 }}>
+                    {getAvatarInitial() || <PersonIcon />}
                   </Avatar>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        fontWeight: 600,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {user.email || "User"}
-                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          fontWeight: 600,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {getDisplayName()}
+                      </Typography>
+                      {profile?.email_verified && (
+                        <VerifiedIcon
+                          fontSize="small"
+                          color="primary"
+                          sx={{ fontSize: 16, flexShrink: 0 }}
+                        />
+                      )}
+                    </Box>
+                    {user?.email && user.email !== getDisplayName() && (
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{
+                          display: "block",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {user.email}
+                      </Typography>
+                    )}
+                    {profileLoading && (
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
+                        <CircularProgress size={12} />
+                        <Typography variant="caption" color="text.secondary">
+                          Loading...
+                        </Typography>
+                      </Box>
+                    )}
+                    {profile && (
+                      <Box sx={{ display: "flex", gap: 0.5, mt: 0.5, flexWrap: "wrap" }}>
+                        {getRoleDisplay() && (
+                          <Chip
+                            label={getRoleDisplay()}
+                            size="small"
+                            variant="outlined"
+                            sx={{ height: 20, fontSize: "0.65rem" }}
+                          />
+                        )}
+                        {profile.remaining_credits !== null &&
+                          profile.remaining_credits !== undefined && (
+                            <Chip
+                              label={`${profile.remaining_credits} credits`}
+                              size="small"
+                              variant="outlined"
+                              color="primary"
+                              sx={{ height: 20, fontSize: "0.65rem" }}
+                            />
+                          )}
+                        {profile.ef_nl_edu_person_home_organization && (
+                          <Chip
+                            label={profile.ef_nl_edu_person_home_organization}
+                            size="small"
+                            variant="outlined"
+                            sx={{ height: 20, fontSize: "0.65rem" }}
+                          />
+                        )}
+                      </Box>
+                    )}
                   </Box>
                 </Box>
-              </Box>
-              <Divider />
-              <MenuItem onClick={handleSignOut}>
+              </Box>,
+              <Divider key="divider" />,
+              <MenuItem key="sign-out" onClick={handleSignOut}>
                 <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
                   <LogoutIcon fontSize="small" />
                 </Box>
                 Sign Out
-              </MenuItem>
-            </>
-          ) : (
-            <>
-              {supabaseConfigured ? (
-                <>
-                  <MenuItem onClick={handleSignIn}>
-                    <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
-                      <LoginIcon fontSize="small" />
-                    </Box>
-                    Sign In with Google
-                  </MenuItem>
-                  {entreefederatieEnabled && (
-                    <MenuItem onClick={handleSignInEntreefederatie}>
-                      <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
-                        <LoginIcon fontSize="small" />
-                      </Box>
-                      Login met schoolaccount
-                    </MenuItem>
-                  )}
-                </>
-              ) : (
-                <MenuItem disabled>
+              </MenuItem>,
+            ]
+          ) : supabaseConfigured ? (
+            [
+              <MenuItem key="sign-in-google" onClick={handleSignIn}>
+                <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
+                  <LoginIcon fontSize="small" />
+                </Box>
+                Sign In with Google
+              </MenuItem>,
+              entreefederatieEnabled && (
+                <MenuItem key="sign-in-entreefederatie" onClick={handleSignInEntreefederatie}>
                   <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
                     <LoginIcon fontSize="small" />
                   </Box>
-                  Supabase not configured
+                  Login met schoolaccount
                 </MenuItem>
-              )}
-            </>
+              ),
+            ].filter(Boolean)
+          ) : (
+            <MenuItem key="not-configured" disabled>
+              <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
+                <LoginIcon fontSize="small" />
+              </Box>
+              Supabase not configured
+            </MenuItem>
           )}
         </Menu>
       </>
@@ -205,63 +288,120 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
       }}
     >
       {isLoggedIn ? (
-        <>
-          <Box sx={{ px: 2, py: 1.5 }}>
+        [
+          <Box key="profile-info" sx={{ px: 2, py: 1.5 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              <Avatar sx={{ width: 40, height: 40 }}>
-                {user.email ? user.email.charAt(0).toUpperCase() : <PersonIcon />}
+              <Avatar src={getAvatarUrl() || undefined} sx={{ width: 40, height: 40 }}>
+                {getAvatarInitial() || <PersonIcon />}
               </Avatar>
               <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography
-                  variant="subtitle2"
-                  sx={{
-                    fontWeight: 600,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {user.email || "User"}
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      fontWeight: 600,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {getDisplayName()}
+                  </Typography>
+                  {profile?.email_verified && (
+                    <VerifiedIcon
+                      fontSize="small"
+                      color="primary"
+                      sx={{ fontSize: 16, flexShrink: 0 }}
+                    />
+                  )}
+                </Box>
+                {user?.email && user.email !== getDisplayName() && (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{
+                      display: "block",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {user.email}
+                  </Typography>
+                )}
+                {profileLoading && (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
+                    <CircularProgress size={12} />
+                    <Typography variant="caption" color="text.secondary">
+                      Loading...
+                    </Typography>
+                  </Box>
+                )}
+                {profile && (
+                  <Box sx={{ display: "flex", gap: 0.5, mt: 0.5, flexWrap: "wrap" }}>
+                    {getRoleDisplay() && (
+                      <Chip
+                        label={getRoleDisplay()}
+                        size="small"
+                        variant="outlined"
+                        sx={{ height: 20, fontSize: "0.65rem" }}
+                      />
+                    )}
+                    {profile.remaining_credits !== null &&
+                      profile.remaining_credits !== undefined && (
+                        <Chip
+                          label={`${profile.remaining_credits} credits`}
+                          size="small"
+                          variant="outlined"
+                          color="primary"
+                          sx={{ height: 20, fontSize: "0.65rem" }}
+                        />
+                      )}
+                    {profile.ef_nl_edu_person_home_organization && (
+                      <Chip
+                        label={profile.ef_nl_edu_person_home_organization}
+                        size="small"
+                        variant="outlined"
+                        sx={{ height: 20, fontSize: "0.65rem" }}
+                      />
+                    )}
+                  </Box>
+                )}
               </Box>
             </Box>
-          </Box>
-          <Divider />
-          <MenuItem onClick={handleSignOut}>
+          </Box>,
+          <Divider key="divider" />,
+          <MenuItem key="sign-out" onClick={handleSignOut}>
             <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
               <LogoutIcon fontSize="small" />
             </Box>
             Sign Out
-          </MenuItem>
-        </>
-      ) : (
-        <>
-          {supabaseConfigured ? (
-            <>
-              <MenuItem onClick={handleSignIn}>
-                <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
-                  <LoginIcon fontSize="small" />
-                </Box>
-                Sign In with Google
-              </MenuItem>
-              {entreefederatieEnabled && (
-                <MenuItem onClick={handleSignInEntreefederatie}>
-                  <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
-                    <LoginIcon fontSize="small" />
-                  </Box>
-                  Login met schoolaccount
-                </MenuItem>
-              )}
-            </>
-          ) : (
-            <MenuItem disabled>
+          </MenuItem>,
+        ]
+      ) : supabaseConfigured ? (
+        [
+          <MenuItem key="sign-in-google" onClick={handleSignIn}>
+            <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
+              <LoginIcon fontSize="small" />
+            </Box>
+            Sign In with Google
+          </MenuItem>,
+          entreefederatieEnabled && (
+            <MenuItem key="sign-in-entreefederatie" onClick={handleSignInEntreefederatie}>
               <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
                 <LoginIcon fontSize="small" />
               </Box>
-              Supabase not configured
+              Login met schoolaccount
             </MenuItem>
-          )}
-        </>
+          ),
+        ].filter(Boolean)
+      ) : (
+        <MenuItem key="not-configured" disabled>
+          <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
+            <LoginIcon fontSize="small" />
+          </Box>
+          Supabase not configured
+        </MenuItem>
       )}
     </Menu>
   );

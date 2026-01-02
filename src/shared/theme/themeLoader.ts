@@ -1,3 +1,21 @@
+/**
+ * Theme Loader - Theme Persistence and Loading
+ *
+ * Handles loading themes from localStorage and provides utilities for theme management.
+ * Supports custom themes that override the default theme configuration.
+ *
+ * Storage:
+ * - Custom themes are stored in localStorage under the key "custom_mui_theme"
+ * - Themes are stored as JSON strings
+ *
+ * Functions:
+ * - loadTheme(): Loads custom theme from localStorage or returns default theme
+ * - getCustomTheme(): Retrieves custom theme from localStorage
+ * - saveCustomTheme(options): Saves custom theme to localStorage
+ * - removeCustomTheme(): Removes custom theme and reverts to default
+ * - validateThemeOptions(json): Validates theme JSON and returns validation result
+ */
+
 import { createTheme, ThemeOptions } from "@mui/material/styles";
 import { defaultThemeOptions } from "./defaultTheme";
 
@@ -5,6 +23,7 @@ const CUSTOM_THEME_STORAGE_KEY = "custom_mui_theme";
 
 /**
  * Get custom theme from localStorage
+ * @returns ThemeOptions if found, null otherwise
  */
 export const getCustomTheme = (): ThemeOptions | null => {
   try {
@@ -20,6 +39,7 @@ export const getCustomTheme = (): ThemeOptions | null => {
 
 /**
  * Save custom theme to localStorage
+ * @param themeOptions - Theme options to save
  */
 export const saveCustomTheme = (themeOptions: ThemeOptions): void => {
   try {
@@ -38,6 +58,7 @@ export const removeCustomTheme = (): void => {
 
 /**
  * Load theme - custom theme if available, otherwise default
+ * @returns Created MUI theme instance
  */
 export const loadTheme = () => {
   const customTheme = getCustomTheme();
@@ -48,7 +69,9 @@ export const loadTheme = () => {
 };
 
 /**
- * Validate theme options
+ * Validate theme options JSON string
+ * @param themeJson - JSON string to validate
+ * @returns Validation result with error message if invalid, or theme object if valid
  */
 export const validateThemeOptions = (
   themeJson: string

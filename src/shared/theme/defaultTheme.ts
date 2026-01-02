@@ -1,51 +1,117 @@
+/**
+ * MUI Theme Configuration
+ *
+ * This file contains ALL app styling, colors, typography, and component overrides.
+ * It is the single source of truth for visual design in the application.
+ *
+ * Structure:
+ * - palette: All color definitions (primary, secondary, background, text, etc.)
+ * - typography: Font families, sizes, weights for all text elements
+ * - components: MUI component style overrides
+ *
+ * Principles:
+ * - Use palette references instead of hardcoded colors where possible
+ * - All component styling should be defined here, not in individual components
+ * - Use sx prop in components only for layout/spacing, not colors/styling
+ */
+
 import { createTheme, ThemeOptions } from "@mui/material/styles";
+
+// Color constants - define once, reference everywhere
+const COLORS = {
+  primary: "#CF13B3",
+  secondary: "#E6196B",
+  background: {
+    default: "#070614",
+    paper: "#1C1B29",
+  },
+  text: {
+    primary: "#ffffff",
+    secondary: "#F5F5F7",
+  },
+  gradient: {
+    start: "#8D0BD1",
+    end: "#CF13B3",
+  },
+} as const;
 
 export const defaultThemeOptions: ThemeOptions = {
   palette: {
     mode: "dark",
     primary: {
-      main: "#CF13B3",
+      main: COLORS.primary,
     },
     secondary: {
-      main: "#E6196B",
+      main: COLORS.secondary,
     },
     background: {
-      default: "#070614",
-      paper: "#1C1B29",
+      default: COLORS.background.default,
+      paper: COLORS.background.paper,
     },
     text: {
-      primary: "#ffffff",
-      secondary: "#F5F5F7",
+      primary: COLORS.text.primary,
+      secondary: COLORS.text.secondary,
     },
   },
   typography: {
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat, sans-serif",
     h1: {
-      fontFamily: "Montserrat",
+      fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
     },
     h2: {
-      fontFamily: "Montserrat",
+      fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
     },
     h3: {
-      fontFamily: "Montserrat",
+      fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
     },
     h4: {
-      fontFamily: "Montserrat",
+      fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
     },
     h5: {
-      fontFamily: "Montserrat",
+      fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
     },
     h6: {
-      fontFamily: "Montserrat",
+      fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
     },
   },
   components: {
+    // AppBar styling
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "background.paper",
+          color: "text.primary",
+        },
+      },
+    },
+    // Toolbar styling
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          minHeight: 64,
+        },
+      },
+    },
+    // Link styling - handles all anchor tags and Link components
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: "text.primary",
+          textDecoration: "none",
+          "&:hover": {
+            color: "primary.main",
+            textDecoration: "none",
+          },
+        },
+      },
+    },
+    // Button styling
     MuiButton: {
       styleOverrides: {
         root: {
@@ -54,13 +120,12 @@ export const defaultThemeOptions: ThemeOptions = {
           padding: "8px 24px",
         },
         contained: {
-          background:
-            "linear-gradient(45deg, #8D0BD1 0%, #CF13B3 30%, #8D0BD1 60%, #CF13B3 90%, #8D0BD1 100%)",
+          background: `linear-gradient(45deg, ${COLORS.gradient.start} 0%, ${COLORS.primary} 30%, ${COLORS.gradient.start} 60%, ${COLORS.primary} 90%, ${COLORS.gradient.start} 100%)`,
           backgroundSize: "200% 200%",
           backgroundPosition: "0% 50%",
           border: 0,
           boxShadow: "0 3px 5px 2px rgba(0, 0, 0, 0.4)",
-          color: "white",
+          color: COLORS.text.primary,
           transition: "background-position 0.6s ease",
           "&:hover": {
             backgroundPosition: "100% 50%",
@@ -70,39 +135,69 @@ export const defaultThemeOptions: ThemeOptions = {
           },
         },
         text: {
-          color: "#ffffff",
+          color: COLORS.text.primary,
           "&.MuiButton-colorPrimary": {
-            color: "#CF13B3",
+            color: COLORS.primary,
             "&:hover": {
               backgroundColor: "rgba(207, 19, 179, 0.1)",
             },
           },
           "&.MuiButton-colorSecondary": {
-            color: "#E6196B",
+            color: COLORS.secondary,
             "&:hover": {
               backgroundColor: "rgba(230, 25, 107, 0.1)",
+            },
+          },
+          "&.MuiButton-colorInherit": {
+            color: "inherit",
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
             },
           },
         },
         outlined: {
-          borderColor: "#ffffff",
-          color: "#ffffff",
+          borderColor: COLORS.text.primary,
+          color: COLORS.text.primary,
           "&.MuiButton-colorPrimary": {
-            borderColor: "#CF13B3",
-            color: "#CF13B3",
+            borderColor: COLORS.primary,
+            color: COLORS.primary,
             "&:hover": {
-              borderColor: "#CF13B3",
+              borderColor: COLORS.primary,
               backgroundColor: "rgba(207, 19, 179, 0.1)",
             },
           },
           "&.MuiButton-colorSecondary": {
-            borderColor: "#E6196B",
-            color: "#E6196B",
+            borderColor: COLORS.secondary,
+            color: COLORS.secondary,
             "&:hover": {
-              borderColor: "#E6196B",
+              borderColor: COLORS.secondary,
               backgroundColor: "rgba(230, 25, 107, 0.1)",
             },
           },
+          "&.MuiButton-colorInherit": {
+            borderColor: "currentColor",
+            color: "inherit",
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+            },
+          },
+        },
+      },
+    },
+    // CssBaseline customization - handles global styles
+    MuiCssBaseline: {
+      styleOverrides: {
+        code: {
+          fontFamily: "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
+        },
+        "*": {
+          boxSizing: "border-box",
+        },
+        body: {
+          margin: 0,
+          minHeight: "100vh",
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
         },
       },
     },

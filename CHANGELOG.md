@@ -5,6 +5,66 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.3] - 2026-01-02
+
+### Changed
+
+- Refactored theme system to be the single source of truth for all app styling
+- All colors, typography, and component styling now centralized in `src/shared/theme/defaultTheme.ts`
+- Removed all conflicting CSS files (`index.css`, `App.css`, `global.css`)
+- Theme now handles all global styles via `MuiCssBaseline` customization
+- Added `MuiLink` component styling to theme (handles link hover colors)
+- Improved theme documentation with usage examples and structure explanations
+
+### Removed
+
+- `src/index.css` - Vite boilerplate CSS conflicting with MUI theme
+- `src/App.css` - Unused Vite boilerplate CSS
+- `src/assets/styles/global.css` - Styles moved to theme via `MuiCssBaseline`
+- All CSS imports from `main.tsx` - styling now handled entirely by MUI theme
+
+### Technical
+
+- Centralized color constants in `COLORS` object for better maintainability
+- Added comprehensive documentation to all theme files
+- Theme files now include JSDoc comments explaining structure and usage
+- `MuiCssBaseline` handles box-sizing, code fonts, and body styles
+- All component styling moved to theme `components.styleOverrides`
+- Components now use `sx` prop only for layout/spacing, not colors/styling
+
+## [0.5.2] - 2026-01-02
+
+### Added
+
+- User profile data fetching from Supabase `users` table
+- `useUserProfile` hook to fetch and manage user profile data
+- Enhanced ProfileMenu with detailed user information:
+  - Display name (falls back to email if not set)
+  - Profile photo support via `photo_url`
+  - Email verification badge
+  - User role display (Free, Premium, Admin, Super Admin)
+  - Remaining credits display
+  - Organization name display (for Entreefederatie users)
+- Loading state indicator in ProfileMenu while fetching profile data
+
+### Changed
+
+- ProfileMenu now displays comprehensive user information from database
+- ProfileMenu uses arrays instead of Fragments for MUI Menu compatibility
+- Avatar component now supports photo URLs from user profile
+
+### Fixed
+
+- Fixed MUI Menu Fragment warning by using arrays instead of Fragments
+- Fixed import path in LoginPage for ProfileMenu component
+
+### Technical
+
+- Created `useUserProfile` hook in `src/features/auth/hooks/useUserProfile.ts`
+- Hook automatically fetches user profile when user logs in
+- Handles missing user profiles gracefully (user may not exist in users table yet)
+- ProfileMenu displays user details with proper loading and error states
+
 ## [0.5.1] - 2026-01-02
 
 ### Added
