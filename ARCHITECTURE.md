@@ -122,11 +122,11 @@ export const LoginForm = () => {
 };
 ```
 
-**Page** (`pages/LoginPage.tsx`):
+**Page** (`pages/HomePage.tsx`):
 ```typescript
 // Route-level, composes components
-export const LoginPage = () => {
-  return <LoginForm />;
+export const HomePage = () => {
+  return <WelcomeContent />;
 };
 ```
 
