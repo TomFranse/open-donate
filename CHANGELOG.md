@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Changed selector from `.MuiInputBase-root` to `.MuiInputBase-input`
   - Label now uses MUI's default styling correctly
   - Only input text area uses monospace font, not the label
+- **ThemeSection**: Refactored ThemeDialog to comply with complexity rules
+  - Extracted `ThemeDialogContent` component to separate UI rendering from state management
+  - Reduced `ThemeDialog` function from 134 lines to 75 lines (under 100-line limit)
+  - Improved code maintainability by separating concerns
 
 ### Removed
 
