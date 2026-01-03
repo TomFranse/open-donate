@@ -1,4 +1,3 @@
-import React from "react";
 import { Menu } from "@mui/material";
 import { useAuthContext } from "@store/contexts/AuthContext";
 import { useSupabaseConfig } from "@shared/hooks/useSupabaseConfig";
@@ -18,10 +17,10 @@ interface ProfileMenuProps {
  * ProfileMenu component for displaying user account information and sign-in options.
  * Shows sign-in buttons when user is not logged in, and profile/logout when logged in.
  */
-export const ProfileMenu: React.FC<ProfileMenuProps> = ({
+export const ProfileMenu = ({
   anchorEl: externalAnchorEl,
   onClose: externalOnClose,
-}) => {
+}: ProfileMenuProps) => {
   const { user } = useAuthContext();
   const { profile, loading: profileLoading } = useUserProfile(user);
   const { isConfigured: supabaseConfigured } = useSupabaseConfig();

@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **TypeScript Module Resolution**: Fixed IDE errors for `@features/setup/*` imports
   - Path aliases now configured in both `tsconfig.app.json` (build) and `tsconfig.json` (IDE)
   - All module resolution errors resolved
+- **React Import**: Removed unnecessary React import from ProfileMenu component
+  - Removed `import React from "react"` (not needed with `jsx: "react-jsx"` transform)
+  - Changed `React.FC` to regular function signature
+  - Fixes TypeScript `esModuleInterop` error
 
 ### Technical
 
