@@ -9,6 +9,7 @@ import {
   removeCustomTheme,
   getCustomTheme,
 } from "@shared/theme/themeLoader";
+import { defaultThemeOptions } from "@shared/theme/defaultTheme";
 import { updateSetupSectionStatus, getSetupSectionsState } from "@utils/setupUtils";
 import type { SetupStatus } from "@utils/setupUtils";
 
@@ -50,14 +51,15 @@ const ThemeDialog = ({ open, onClose, onStatusChange }: ThemeDialogProps) => {
     null
   );
 
-  // Load existing custom theme if available
+  // Load existing custom theme if available, otherwise use default theme as starting point
   useEffect(() => {
     if (open) {
       const existingTheme = getCustomTheme();
       if (existingTheme) {
         setThemeJson(JSON.stringify(existingTheme, null, 2));
       } else {
-        setThemeJson("");
+        // Show default theme as starting point
+        setThemeJson(JSON.stringify(defaultThemeOptions, null, 2));
       }
       setThemeValidation(null);
     }
@@ -103,8 +105,10 @@ const ThemeDialog = ({ open, onClose, onStatusChange }: ThemeDialogProps) => {
       title="Customize Theme"
       saveButtonText="Save"
     >
-      <Box>
-        <Typography variant="body2" color="text.secondary" paragraph>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden" }}
+      >
+        <Typography variant="body2" color="text.secondary" paragraph sx={{ flexShrink: 0 }}>
           You can customize your app's theme using the{" "}
           <Typography
             component="a"
@@ -118,7 +122,7 @@ const ThemeDialog = ({ open, onClose, onStatusChange }: ThemeDialogProps) => {
           . Paste your theme JSON below to override the default theme.
         </Typography>
 
-        <Alert severity="info" sx={{ mb: 3 }}>
+        <Alert severity="info" sx={{ mb: 2, flexShrink: 0 }}>
           <Typography variant="body2">
             <strong>Note:</strong> Leave this empty to use the default theme. You can always change
             this later.
@@ -129,18 +133,29 @@ const ThemeDialog = ({ open, onClose, onStatusChange }: ThemeDialogProps) => {
           label="Theme JSON"
           value={themeJson}
           onChange={(e) => {
-            setThemeJson(e.target.value);
+            setThemeJson(e.currentTarget.value);
             setThemeValidation(null);
           }}
           fullWidth
           multiline
-          rows={12}
           margin="normal"
           placeholder='{"palette": {"mode": "dark", "primary": {"main": "#..."}}}'
           sx={{
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
             "& .MuiInputBase-root": {
+              flex: 1,
+              minHeight: 0,
+              alignItems: "flex-start",
+            },
+            "& .MuiInputBase-input": {
               fontFamily: "monospace",
               fontSize: "0.875rem",
+              overflow: "auto !important",
+              height: "100% !important",
+              resize: "none",
             },
           }}
         />
@@ -149,7 +164,7 @@ const ThemeDialog = ({ open, onClose, onStatusChange }: ThemeDialogProps) => {
           <Alert
             severity={themeValidation.valid ? "success" : "error"}
             icon={themeValidation.valid ? <CheckCircle /> : <ErrorIcon />}
-            sx={{ mt: 2 }}
+            sx={{ mt: 2, flexShrink: 0 }}
           >
             {themeValidation.valid
               ? themeJson.trim()
@@ -160,7 +175,7 @@ const ThemeDialog = ({ open, onClose, onStatusChange }: ThemeDialogProps) => {
         )}
 
         {themeJson.trim() && !themeValidation && (
-          <Alert severity="warning" sx={{ mt: 2 }}>
+          <Alert severity="warning" sx={{ mt: 2, flexShrink: 0 }}>
             <Typography variant="body2">
               Click "Validate Theme" to check your theme before saving, or leave empty to use the
               default theme.
@@ -168,7 +183,7 @@ const ThemeDialog = ({ open, onClose, onStatusChange }: ThemeDialogProps) => {
           </Alert>
         )}
 
-        <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+        <Box sx={{ display: "flex", gap: 2, mt: 2, flexShrink: 0 }}>
           <Button variant="outlined" onClick={handleThemeValidation}>
             Validate Theme
           </Button>

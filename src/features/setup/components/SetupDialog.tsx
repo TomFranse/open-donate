@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { Save } from "@mui/icons-material";
 
 interface SetupDialogProps {
@@ -28,12 +28,29 @@ export const SetupDialog = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <Box sx={{ pt: 1 }}>{children}</Box>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth={false}
+      fullWidth
+      PaperProps={{
+        sx: {
+          width: { xs: "95%", sm: "90%", md: "85%", lg: "80%" },
+          maxWidth: "1200px",
+          height: { xs: "95%", sm: "90%", md: "85%", lg: "80%" },
+          maxHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+        },
+      }}
+    >
+      <DialogTitle sx={{ flexShrink: 0 }}>{title}</DialogTitle>
+      <DialogContent
+        sx={{ display: "flex", flexDirection: "column", minHeight: 0, flex: 1, overflow: "hidden" }}
+      >
+        {children}
       </DialogContent>
-      <DialogActions sx={{ px: 3, pb: 2 }}>
+      <DialogActions sx={{ flexShrink: 0 }}>
         {showCancel && (
           <Button onClick={onClose} color="inherit">
             Cancel
@@ -44,7 +61,6 @@ export const SetupDialog = ({
           onClick={handleSave}
           disabled={saveButtonDisabled}
           startIcon={<Save />}
-          sx={{ ml: "auto" }}
         >
           {saveButtonText}
         </Button>

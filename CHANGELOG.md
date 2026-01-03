@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Theme Customization**: Default theme now pre-populated in theme customization dialog
+  - Theme JSON input field automatically shows default theme options as starting point
+  - Default theme content imported directly from `defaultTheme.ts` (single source of truth)
+  - Users can see what's available and modify from there
+
+### Changed
+
+- **SetupDialog**: Made dialog scale flexibly to fill available screen space
+  - Dialog now uses responsive width/height (95% on mobile down to 80% on large screens)
+  - Maximum dimensions: 1200px width, 90vh height
+  - Dialog adapts to zoom levels (Ctrl +/-) and screen sizes
+  - Only TextField input area scrolls, all other content stays fixed
+- **SetupDialog**: Removed unnecessary style declarations
+  - Removed redundant padding/margin overrides that MUI handles by default
+  - Removed unnecessary Box wrapper with padding
+  - Cleaner code relying on MUI's built-in spacing
+
+### Fixed
+
+- **ThemeSection TextField**: Fixed label styling being affected by input styles
+  - Changed selector from `.MuiInputBase-root` to `.MuiInputBase-input`
+  - Label now uses MUI's default styling correctly
+  - Only input text area uses monospace font, not the label
+
 ### Removed
 
 - **Login and Signup Pages**: Removed dedicated authentication pages
