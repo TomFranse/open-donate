@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2026-01-12]
 
+### Changed
+
+- **Scrollbar Styling**: Simplified scrollbar appearance with transparent track and subtle thumb
+  - Removed prominent background color from scrollbars
+  - Scrollbar thumb uses theme's text.primary color with 30% opacity (50% on hover)
+  - Transparent track for minimal visual footprint
+  - Works across all browsers (Firefox and Webkit-based browsers)
+  - Styling uses theme constants (`COLORS.text.primary`) for consistency
+
+## [2026-01-12]
+
 ### Added
 
 - **Styling Scope Standards Rule**: Added new cursor rule to prevent incorrect styling scope decisions

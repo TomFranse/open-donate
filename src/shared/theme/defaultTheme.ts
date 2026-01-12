@@ -15,7 +15,7 @@
  * - Use sx prop in components only for layout/spacing, not colors/styling
  */
 
-import { createTheme, ThemeOptions, Theme } from "@mui/material/styles";
+import { createTheme, ThemeOptions, Theme, alpha } from "@mui/material/styles";
 
 // Color constants - define once, reference everywhere
 const COLORS = {
@@ -211,6 +211,23 @@ export const defaultThemeOptions: ThemeOptions = {
         }),
         "*": {
           boxSizing: "border-box",
+          // Firefox scrollbar styling
+          scrollbarWidth: "thin",
+          scrollbarColor: `${alpha(COLORS.text.primary, 0.3)} transparent`,
+        },
+        "*::-webkit-scrollbar": {
+          width: "8px",
+          height: "8px",
+        },
+        "*::-webkit-scrollbar-track": {
+          background: "transparent",
+        },
+        "*::-webkit-scrollbar-thumb": {
+          backgroundColor: alpha(COLORS.text.primary, 0.3),
+          borderRadius: "4px",
+          "&:hover": {
+            backgroundColor: alpha(COLORS.text.primary, 0.5),
+          },
         },
         body: {
           margin: 0,
