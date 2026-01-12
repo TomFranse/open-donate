@@ -63,6 +63,25 @@ export const getAirtableTableId = (): string => {
 };
 
 /**
+ * Airtable field structure
+ */
+export interface AirtableField {
+  id: string;
+  name: string;
+  type: string;
+  options?: Record<string, unknown>;
+}
+
+/**
+ * Airtable table structure
+ */
+export interface AirtableTableStructure {
+  id: string;
+  name: string;
+  fields: AirtableField[];
+}
+
+/**
  * Test Airtable connection
  */
 export const testAirtableConnection = async (
@@ -83,6 +102,76 @@ export const testAirtableConnection = async (
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to connect to Airtable",
+    };
+  }
+};
+
+/**
+ * Get Airtable table structure using Meta API
+ */
+export const getAirtableTableStructure = async (
+  apiKey: string,
+  baseId: string,
+  tableId: string
+): Promise<{ success: boolean; data?: AirtableTableStructure; error?: string }> => {
+  try {
+    const response = await fetch(`https://api.airtable.com/v0/meta/bases/${baseId}/tables`, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        return {
+          success: false,
+          error: "Invalid API key. Please check your Personal Access Token.",
+        };
+      }
+      if (response.status === 404) {
+        return {
+          success: false,
+          error: `Base "${baseId}" not found. Please check your Base ID.`,
+        };
+      }
+      return {
+        success: false,
+        error: `API error: ${response.status} ${response.statusText}`,
+      };
+    }
+
+    const data = (await response.json()) as {
+      tables: Array<{ id: string; name: string; fields: AirtableField[] }>;
+    };
+
+    // Find table by name or ID (case-sensitive for name)
+    const table = data.tables.find((t) => t.name === tableId || t.id === tableId);
+
+    if (!table) {
+      return {
+        success: false,
+        error: `Table "${tableId}" not found in base. Please check your Table ID.`,
+      };
+    }
+
+    return {
+      success: true,
+      data: {
+        id: table.id,
+        name: table.name,
+        fields: table.fields.map((f) => ({
+          id: f.id,
+          name: f.name,
+          type: f.type,
+          options: f.options,
+        })),
+      },
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to fetch table structure",
     };
   }
 };

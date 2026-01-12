@@ -10,6 +10,7 @@ interface SetupDialogProps {
   saveButtonText?: string;
   saveButtonDisabled?: boolean;
   showCancel?: boolean;
+  closeOnSave?: boolean;
 }
 
 export const SetupDialog = ({
@@ -21,10 +22,13 @@ export const SetupDialog = ({
   saveButtonText = "Save",
   saveButtonDisabled = false,
   showCancel = true,
+  closeOnSave = true,
 }: SetupDialogProps) => {
   const handleSave = async () => {
     await onSave();
-    onClose();
+    if (closeOnSave) {
+      onClose();
+    }
   };
 
   return (

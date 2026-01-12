@@ -95,11 +95,47 @@ function removeSupabaseFiles() {
 }
 
 /**
+ * Remove package dependency from package.json
+ */
+function removePackageDependency(packageName) {
+  const packagePath = join(projectRoot, "package.json");
+  if (!existsSync(packagePath)) {
+    return false;
+  }
+
+  try {
+    const packageJson = JSON.parse(readFileSync(packagePath, "utf-8"));
+
+    // Remove from dependencies
+    if (packageJson.dependencies?.[packageName]) {
+      delete packageJson.dependencies[packageName];
+    }
+
+    // Remove from devDependencies
+    if (packageJson.devDependencies?.[packageName]) {
+      delete packageJson.devDependencies[packageName];
+    }
+
+    writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n", "utf-8");
+    return true;
+  } catch (error) {
+    console.error(`Error removing package ${packageName}:`, error.message);
+    return false;
+  }
+}
+
+/**
  * Remove Airtable-related files if Airtable not enabled
  */
 function removeAirtableFiles() {
   const files = [
     "src/shared/services/airtableService.ts",
+    "src/features/setup/components/AirtableDescription.tsx",
+    "src/features/setup/components/AirtableFormFields.tsx",
+    "src/features/setup/components/AirtablePatInstructions.tsx",
+    "src/features/setup/components/TableStructureDisplay.tsx",
+    "src/features/setup/hooks/useAirtableSetup.ts",
+    "src/features/setup/components/sections/AirtableSection.tsx",
   ];
 
   let removed = 0;
@@ -108,6 +144,13 @@ function removeAirtableFiles() {
       removed++;
     }
   }
+
+  // Remove airtable package from package.json
+  if (removePackageDependency("airtable")) {
+    console.log("✅ Removed 'airtable' package from package.json");
+    removed++;
+  }
+
   return removed;
 }
 
@@ -156,6 +199,15 @@ function updateAppTsx(enabledFeatures) {
     // Remove auth routes
     content = content.replace(/<Route element=\{<AuthLayout \/>\}>[\s\S]*?<\/Route>/g, "");
     content = content.replace(/<Route path="\/auth\/callback" element=\{<AuthCallbackPage \/>\} \/>\s*\n/g, "");
+  }
+
+  // Remove Airtable-related imports and usage if Airtable disabled
+  const airtableEnabled = enabledFeatures.includes("airtable");
+  if (!airtableEnabled) {
+    // Remove AirtableCard import from SetupPage
+    content = content.replace(/import { AirtableCard } from[^\n]*\n/g, "");
+    // Remove AirtableCard usage
+    content = content.replace(/<AirtableCard[^>]*\/>\s*\n/g, "");
   }
 
   // Clean up extra blank lines

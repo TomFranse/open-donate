@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { Box, Alert, Typography, Button } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, Alert, Typography, Button, Stepper, Step, StepLabel } from "@mui/material";
 import { SetupCard } from "../SetupCard";
 import { SetupDialog } from "../SetupDialog";
-import { ConnectionTestResult } from "../ConnectionTestResult";
 import { EnvVariablesDisplay } from "../EnvVariablesDisplay";
 import { AirtableFormFields } from "../AirtableFormFields";
 import { AirtableDescription } from "../AirtableDescription";
-import { useConnectionTest } from "../../hooks/useConnectionTest";
+import { AirtablePatInstructions } from "../AirtablePatInstructions";
+import { TableStructureDisplay } from "../TableStructureDisplay";
 import { useAirtableSetup } from "../../hooks/useAirtableSetup";
 import { updateSetupSectionStatus, getSetupSectionsState } from "@utils/setupUtils";
 import type { SetupStatus } from "@utils/setupUtils";
@@ -45,28 +45,62 @@ interface AirtableDialogProps {
 }
 
 const AirtableDialog = ({ open, onClose, onStatusChange }: AirtableDialogProps) => {
+  const [activeStep, setActiveStep] = useState(0);
   const [airtableApiKey, setAirtableApiKey] = useState("");
   const [airtableBaseId, setAirtableBaseId] = useState("");
   const [airtableTableId, setAirtableTableId] = useState("");
-  const { testAirtableConnection } = useAirtableSetup();
+  const { fetchTableStructure, tableStructure, loadingStructure, structureError, resetStructure } =
+    useAirtableSetup();
 
-  const testConnection = useConnectionTest({
-    onTest: async () => {
+  // Reset state when dialog opens/closes
+  useEffect(() => {
+    if (!open) {
+      setActiveStep(0);
+      setAirtableApiKey("");
+      setAirtableBaseId("");
+      setAirtableTableId("");
+      resetStructure();
+    }
+  }, [open, resetStructure]);
+
+  const handleNext = async () => {
+    if (activeStep === 0) {
+      // Step 0: PAT instructions - just move to credentials step
+      setActiveStep(1);
+    } else if (activeStep === 1) {
+      // Step 1: Validate credentials are filled
       if (!airtableApiKey || !airtableBaseId || !airtableTableId) {
-        return { success: false, error: "Please enter API key, Base ID, and Table ID" };
+        return;
       }
-      return await testAirtableConnection(airtableApiKey, airtableBaseId, airtableTableId);
-    },
-  });
+      // Move to validation step and fetch structure
+      setActiveStep(2);
+      await fetchTableStructure(airtableApiKey, airtableBaseId, airtableTableId);
+    } else if (activeStep === 2) {
+      // Step 2: Move to completion step
+      setActiveStep(3);
+    }
+  };
+
+  const handleBack = () => {
+    if (activeStep > 0) {
+      setActiveStep(activeStep - 1);
+      if (activeStep === 3) {
+        // Reset structure when going back from completion step
+        resetStructure();
+      }
+    }
+  };
 
   const handleSave = async () => {
-    if (!testConnection.testResult?.success) {
-      await testConnection.runTest();
+    if (activeStep < 3) {
+      await handleNext();
       return;
     }
 
+    // Final step - mark as completed
     updateSetupSectionStatus("airtable", "completed");
     onStatusChange?.();
+    onClose();
   };
 
   const handleSkip = () => {
@@ -75,63 +109,155 @@ const AirtableDialog = ({ open, onClose, onStatusChange }: AirtableDialogProps) 
     onClose();
   };
 
+  const canProceedFromStep1 = airtableApiKey && airtableBaseId && airtableTableId;
+  const canProceedFromStep2 = tableStructure !== null && !loadingStructure && !structureError;
+
+  const getSaveButtonText = () => {
+    if (activeStep === 0) return "Continue";
+    if (activeStep === 1) return "Next";
+    if (activeStep === 2) return canProceedFromStep2 ? "Next" : "Validating...";
+    return "Finish Setup";
+  };
+
+  const getSaveButtonDisabled = () => {
+    if (activeStep === 0) return false; // Always enabled for PAT instructions
+    if (activeStep === 1) return !canProceedFromStep1;
+    if (activeStep === 2) return loadingStructure || !canProceedFromStep2;
+    return false;
+  };
+
+  const steps = ["Create PAT", "Enter Credentials", "Validate Connection", "Complete Setup"];
+
   return (
     <SetupDialog
       open={open}
       onClose={onClose}
       onSave={handleSave}
       title="Configure Airtable"
-      saveButtonText={testConnection.testResult?.success ? "Save" : "Test & Save"}
-      saveButtonDisabled={
-        !airtableApiKey || !airtableBaseId || !airtableTableId || testConnection.testing
-      }
+      saveButtonText={getSaveButtonText()}
+      saveButtonDisabled={getSaveButtonDisabled()}
+      showCancel={activeStep === 0 || activeStep === 1}
+      closeOnSave={activeStep === 3}
     >
       <Box>
-        <AirtableDescription />
+        <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
 
-        <AirtableFormFields
-          apiKey={airtableApiKey}
-          baseId={airtableBaseId}
-          tableId={airtableTableId}
-          onApiKeyChange={setAirtableApiKey}
-          onBaseIdChange={setAirtableBaseId}
-          onTableIdChange={setAirtableTableId}
-        />
-
-        <ConnectionTestResult
-          result={testConnection.testResult}
-          successMessage="Connection successful! Add the environment variables below to your .env file."
-        />
-
-        {testConnection.testResult?.success && (
-          <EnvVariablesDisplay
-            variables={[
-              { name: "VITE_AIRTABLE_API_KEY", value: airtableApiKey },
-              { name: "VITE_AIRTABLE_BASE_ID", value: airtableBaseId },
-              { name: "VITE_AIRTABLE_TABLE_ID", value: airtableTableId },
-            ]}
-            title="Add to .env file"
-            description="Copy these values to your .env file in the project root:"
-          />
+        {/* Step 0: Create PAT Instructions */}
+        {activeStep === 0 && (
+          <Box>
+            <AirtablePatInstructions onContinue={handleNext} />
+            <Box sx={{ mt: 2 }}>
+              <Button variant="outlined" onClick={handleSkip} color="inherit">
+                Skip Airtable Setup
+              </Button>
+            </Box>
+          </Box>
         )}
 
-        {testConnection.testResult?.success && (
-          <Alert severity="info" sx={{ mb: 2, mt: 2 }}>
-            <Typography variant="body2">
-              <strong>Important:</strong> After adding these to your{" "}
-              <Typography component="code" sx={{ bgcolor: "grey.200", px: 0.5, borderRadius: 0.5 }}>
-                .env
-              </Typography>{" "}
-              file, restart your development server for the changes to take effect.
+        {/* Step 1: Enter Credentials */}
+        {activeStep === 1 && (
+          <Box>
+            <AirtableDescription />
+
+            <AirtableFormFields
+              apiKey={airtableApiKey}
+              baseId={airtableBaseId}
+              tableId={airtableTableId}
+              onApiKeyChange={setAirtableApiKey}
+              onBaseIdChange={setAirtableBaseId}
+              onTableIdChange={setAirtableTableId}
+            />
+
+            <Box sx={{ mt: 2 }}>
+              <Button variant="outlined" onClick={handleSkip} color="inherit">
+                Skip Airtable Setup
+              </Button>
+            </Box>
+          </Box>
+        )}
+
+        {/* Step 2: Validate Connection */}
+        {activeStep === 2 && (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Validating Connection
             </Typography>
-          </Alert>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Fetching table structure from Airtable...
+            </Typography>
+
+            <TableStructureDisplay
+              structure={tableStructure}
+              loading={loadingStructure}
+              error={structureError}
+            />
+
+            {structureError && (
+              <Box sx={{ mt: 2 }}>
+                <Button variant="outlined" onClick={handleBack} sx={{ mr: 1 }}>
+                  Back
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    fetchTableStructure(airtableApiKey, airtableBaseId, airtableTableId)
+                  }
+                  disabled={loadingStructure}
+                >
+                  Retry
+                </Button>
+              </Box>
+            )}
+          </Box>
         )}
 
-        <Box sx={{ mt: 2 }}>
-          <Button variant="outlined" onClick={handleSkip} color="inherit">
-            Skip Airtable Setup
-          </Button>
-        </Box>
+        {/* Step 3: Complete Setup */}
+        {activeStep === 3 && (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Setup Complete
+            </Typography>
+
+            <TableStructureDisplay structure={tableStructure} />
+
+            <EnvVariablesDisplay
+              variables={[
+                { name: "VITE_AIRTABLE_API_KEY", value: airtableApiKey },
+                { name: "VITE_AIRTABLE_BASE_ID", value: airtableBaseId },
+                { name: "VITE_AIRTABLE_TABLE_ID", value: airtableTableId },
+              ]}
+              title="Add to .env file"
+              description="Copy these values to your .env file in the project root:"
+            />
+
+            <Alert severity="info" sx={{ mb: 2, mt: 2 }}>
+              <Typography variant="body2">
+                <strong>Important:</strong> After adding these to your{" "}
+                <Typography
+                  component="code"
+                  sx={{ bgcolor: "grey.200", px: 0.5, borderRadius: 0.5 }}
+                >
+                  .env
+                </Typography>{" "}
+                file, restart your development server for the changes to take effect.
+              </Typography>
+            </Alert>
+          </Box>
+        )}
+
+        {/* Navigation buttons */}
+        {activeStep > 0 && activeStep < 3 && (
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
+            <Button onClick={handleBack}>Back</Button>
+            <Box />
+          </Box>
+        )}
       </Box>
     </SetupDialog>
   );

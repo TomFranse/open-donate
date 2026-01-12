@@ -84,3 +84,21 @@ export const skipSupabaseSetup = (): void => {
 export const shouldShowSetup = (): boolean => {
   return false;
 };
+
+/**
+ * Reset Airtable setup status (useful for testing/development)
+ */
+export const resetAirtableSetup = (): void => {
+  updateSetupSectionStatus("airtable", "not-started");
+};
+
+/**
+ * Reset all setup sections to not-started (useful for testing/development)
+ */
+export const resetAllSetupSections = (): void => {
+  try {
+    localStorage.removeItem(SETUP_SECTIONS_STORAGE_KEY);
+  } catch {
+    // Silently fail
+  }
+};

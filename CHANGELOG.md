@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Enhanced Airtable Setup**: Multi-step setup wizard with table structure validation
+  - Step 0: PAT creation instructions with direct link to Airtable token creation page
+  - Step 1: Credential entry (API Key, Base ID, Table ID) with helpful guidance
+  - Step 2: Connection validation and table structure retrieval using Airtable Meta API
+  - Step 3: Review table structure and complete setup
+  - `TableStructureDisplay` component showing table name, fields, types, and options
+  - `getAirtableTableStructure()` service function using Airtable Meta API
+  - Enhanced `useAirtableSetup` hook with structure fetching capabilities
+  - Improved cleanup script that removes `airtable` npm package when Airtable is skipped
+- **Airtable Setup Utilities**: Added reset functions for testing/development
+  - `resetAirtableSetup()` - Reset Airtable setup status
+  - `resetAllSetupSections()` - Reset all setup sections
 - **Boilerplate Extraction System**: Added enterprise-grade scalability tools from main app
   - Project structure validation system with `projectStructure.config.cjs`
   - Dependency cruiser for architecture validation (`arch:check` command)
