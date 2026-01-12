@@ -29,7 +29,7 @@ export const ResetConfirmDialog = ({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        <Warning color="warning" />
+        <Warning color="secondary" />
         Reset {sectionName} Configuration?
       </DialogTitle>
       <DialogContent>
@@ -42,10 +42,10 @@ export const ResetConfirmDialog = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ p: 2 }}>
-        <Button onClick={onClose} disabled={resetting}>
+        <Button onClick={onClose} variant="outlined" disabled={resetting}>
           Cancel
         </Button>
-        <Button onClick={onConfirm} color="warning" variant="contained" disabled={resetting}>
+        <Button onClick={onConfirm} variant="contained" disabled={resetting}>
           {resetting ? "Resetting..." : "Reset Configuration"}
         </Button>
       </DialogActions>

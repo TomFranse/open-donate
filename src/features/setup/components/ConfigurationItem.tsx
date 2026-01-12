@@ -59,7 +59,7 @@ export const ConfigurationItem = ({
         </Typography>
         {canCopy && (
           <Tooltip title={copied ? "Copied!" : "Copy to clipboard"}>
-            <IconButton size="small" onClick={handleCopy} color={copied ? "success" : "default"}>
+            <IconButton size="small" onClick={handleCopy}>
               {copied ? <CheckCircle fontSize="small" /> : <ContentCopy fontSize="small" />}
             </IconButton>
           </Tooltip>

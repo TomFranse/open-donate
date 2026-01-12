@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2026-01-12]
+
+### Changed
+
+- **Centralized Button Styling**: Refactored button styling to be fully centralized in theme
+  - Removed all `color` props from button usages across the application
+  - Button variants now automatically determine colors:
+    - `variant="contained"` → uses primary color (main actions)
+    - `variant="outlined"` → uses white color (secondary actions)
+    - `variant="text"` → uses primary color (text buttons)
+  - All button styling is now managed in `defaultTheme.ts` - components only specify variant
+  - Ensures consistent button styling across the entire application
+
+- **Outlined Button Hover Effect**: Enhanced outlined button with animated gradient slide effect
+  - Outlined buttons now have a smooth gradient slide animation on hover (matching contained buttons)
+  - Gradient transitions from transparent to white with sliding animation
+  - Text color transitions from white to dark during hover for readability
+  - Uses pseudo-element with proper z-index layering to ensure text remains visible
+  - Background size optimized so gradient is only visible during transition, not in static states
+
+### Fixed
+
+- **Button Hover Color Issues**: Fixed inconsistent hover colors on buttons
+  - Previously buttons using undefined colors (`success`, `warning`, `error`, `inherit`) caused unpredictable hover colors
+  - All buttons now use centralized theme colors with consistent hover states
+  - Removed dependency on undefined MUI color props
+
 ### Added
 
 - **ESLint Hardcoded Styling Detection**: Added ESLint rules to detect hardcoded styling values in `sx` props

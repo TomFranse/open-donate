@@ -43,6 +43,8 @@ export const defaultThemeOptions: ThemeOptions = {
     },
     secondary: {
       main: COLORS.secondary,
+      light: "rgba(230, 25, 107, 0.2)",
+      dark: "#C0145A",
     },
     background: {
       default: COLORS.background.default,
@@ -122,13 +124,22 @@ export const defaultThemeOptions: ThemeOptions = {
       },
     },
     // Button styling
+    // All button styling is centralized here. Variants determine colors automatically:
+    // - contained: uses primary color (main actions)
+    // - outlined: uses white color (secondary actions)
+    // - text: uses primary color (text buttons)
+    // Components should NOT specify color prop - variant handles it.
     MuiButton: {
+      defaultProps: {
+        color: "primary", // Default color for all buttons
+      },
       styleOverrides: {
         root: {
           borderRadius: 32,
           height: 48,
           padding: "8px 24px",
         },
+        // Contained variant: primary color (main actions)
         contained: {
           background: `linear-gradient(45deg, ${COLORS.gradient.start} 0%, ${COLORS.primary} 30%, ${COLORS.gradient.start} 60%, ${COLORS.primary} 90%, ${COLORS.gradient.start} 100%)`,
           backgroundSize: "200% 200%",
@@ -144,51 +155,42 @@ export const defaultThemeOptions: ThemeOptions = {
             boxShadow: "0 2px 4px 1px rgba(0, 0, 0, 0.5)",
           },
         },
+        // Text variant: primary color
         text: {
-          color: COLORS.text.primary,
-          "&.MuiButton-colorPrimary": {
-            color: COLORS.primary,
-            "&:hover": {
-              backgroundColor: "rgba(207, 19, 179, 0.1)",
-            },
-          },
-          "&.MuiButton-colorSecondary": {
-            color: COLORS.secondary,
-            "&:hover": {
-              backgroundColor: "rgba(230, 25, 107, 0.1)",
-            },
-          },
-          "&.MuiButton-colorInherit": {
-            color: "inherit",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.08)",
-            },
+          color: COLORS.primary,
+          "&:hover": {
+            backgroundColor: "rgba(207, 19, 179, 0.1)",
           },
         },
+        // Outlined variant: white color (secondary actions)
+        // On hover, gradient slides from transparent to white, text changes to dark
+        // Background size ensures gradient is only visible during transition
         outlined: {
           borderColor: COLORS.text.primary,
           color: COLORS.text.primary,
-          "&.MuiButton-colorPrimary": {
-            borderColor: COLORS.primary,
-            color: COLORS.primary,
-            "&:hover": {
-              borderColor: COLORS.primary,
-              backgroundColor: "rgba(207, 19, 179, 0.1)",
-            },
+          backgroundColor: "transparent",
+          position: "relative",
+          overflow: "hidden",
+          isolation: "isolate",
+          transition: "color 0.6s ease",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `linear-gradient(45deg, transparent 0%, transparent 45%, ${COLORS.text.primary} 75%, ${COLORS.text.primary} 100%)`,
+            backgroundSize: "250% 250%",
+            backgroundPosition: "0% 50%",
+            transition: "background-position 0.6s ease",
+            zIndex: -1,
+            borderRadius: "inherit",
           },
-          "&.MuiButton-colorSecondary": {
-            borderColor: COLORS.secondary,
-            color: COLORS.secondary,
-            "&:hover": {
-              borderColor: COLORS.secondary,
-              backgroundColor: "rgba(230, 25, 107, 0.1)",
-            },
-          },
-          "&.MuiButton-colorInherit": {
-            borderColor: "currentColor",
-            color: "inherit",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.08)",
+          "&:hover": {
+            color: COLORS.background.default,
+            "&::before": {
+              backgroundPosition: "100% 50%",
             },
           },
         },

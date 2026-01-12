@@ -155,7 +155,7 @@ const SupabaseDialog = ({ open, onClose, onStatusChange }: SupabaseDialogProps) 
         )}
 
         <Box sx={{ mt: 2 }}>
-          <Button variant="outlined" onClick={handleSkip} color="inherit">
+          <Button variant="outlined" onClick={handleSkip}>
             Skip Supabase Setup
           </Button>
         </Box>

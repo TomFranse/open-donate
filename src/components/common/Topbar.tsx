@@ -30,11 +30,7 @@ export const Topbar = () => {
 
         {/* Navigation buttons */}
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <Button
-            color={location.pathname === "/setup" ? "primary" : "inherit"}
-            component={Link}
-            to="/setup"
-          >
+          <Button component={Link} to="/setup">
             Setup
           </Button>
           <ProfileMenu />

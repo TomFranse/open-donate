@@ -175,7 +175,7 @@ const AirtableDialog = ({ open, onClose, onStatusChange }: AirtableDialogProps) 
       closeOnSave={activeStep === 3}
       additionalActions={
         (activeStep === 0 || activeStep === 1) && (
-          <Button variant="outlined" onClick={handleSkip} color="inherit">
+          <Button variant="outlined" onClick={handleSkip}>
             Skip Airtable Setup
           </Button>
         )

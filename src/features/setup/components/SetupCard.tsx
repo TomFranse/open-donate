@@ -107,7 +107,6 @@ export const SetupCard = ({ title, description, status, onClick }: SetupCardProp
       <CardActions>
         <Button
           variant={isCompleted ? "outlined" : "contained"}
-          color={isCompleted ? "success" : "primary"}
           fullWidth
           onClick={onClick}
           sx={{ mx: 1, mb: 1 }}

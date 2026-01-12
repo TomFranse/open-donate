@@ -64,7 +64,7 @@ export const ConfigurationViewDialog = ({
           {children}
         </DialogContent>
         <DialogActions sx={{ flexShrink: 0, justifyContent: "space-between", p: 2 }}>
-          <Button onClick={handleResetClick} color="warning" variant="outlined">
+          <Button onClick={handleResetClick} variant="outlined">
             Reset Configuration
           </Button>
           <Button onClick={onClose} variant="contained">

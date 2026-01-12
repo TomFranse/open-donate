@@ -47,17 +47,17 @@ export const FinishSetupDialog = ({
             </DialogContentText>
           </li>
         </Box>
-        <Box sx={{ mt: 2, p: 2, bgcolor: "warning.light", borderRadius: 1 }}>
+        <Box sx={{ mt: 2, p: 2, bgcolor: "secondary.light", borderRadius: 1 }}>
           <DialogContentText>
             <strong>Enabled features:</strong> {getEnabledFeatures().join(", ") || "None"}
           </DialogContentText>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} disabled={finishing}>
+        <Button onClick={onClose} variant="outlined" disabled={finishing}>
           Cancel
         </Button>
-        <Button onClick={onConfirm} variant="contained" color="error" disabled={finishing}>
+        <Button onClick={onConfirm} variant="contained" disabled={finishing}>
           {finishing ? "Finishing..." : "Finish Setup"}
         </Button>
       </DialogActions>

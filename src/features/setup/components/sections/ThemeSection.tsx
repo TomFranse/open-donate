@@ -162,7 +162,7 @@ const ThemeDialogContent = ({
         <Button variant="outlined" onClick={onValidate}>
           Validate Theme
         </Button>
-        <Button variant="outlined" onClick={onSkip} color="inherit">
+        <Button variant="outlined" onClick={onSkip}>
           Skip Theme Customization
         </Button>
       </Box>

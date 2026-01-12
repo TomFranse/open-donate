@@ -58,7 +58,7 @@ export const SetupDialog = ({
         <Box>{additionalActions}</Box>
         <Box sx={{ display: "flex", gap: 1 }}>
           {showCancel && (
-            <Button onClick={onClose} color="inherit">
+            <Button onClick={onClose} variant="outlined">
               Cancel
             </Button>
           )}

@@ -167,7 +167,7 @@ const HostingDialog = ({ open, onClose, onStatusChange }: HostingDialogProps) =>
         </Alert>
 
         <Box sx={{ mt: 2 }}>
-          <Button variant="outlined" onClick={handleSkip} color="inherit">
+          <Button variant="outlined" onClick={handleSkip}>
             Skip Hosting Setup
           </Button>
         </Box>
