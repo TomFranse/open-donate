@@ -649,7 +649,7 @@ module.exports = {
     // TypeScript config files (specific only, no wildcard)
     { name: "vite.config.ts" },
     { name: "vitest.config.ts" },
-    { name: "vite-plugin-env-writer.ts" },
+    { name: "vite-plugin-dev-api.ts" },
     // YAML files (specific only, no wildcard - pure whitelist)
     { name: "pnpm-lock.yaml" },
     { name: "pnpm-workspace.yaml" },

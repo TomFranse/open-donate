@@ -1,9 +1,16 @@
 import { useState } from "react";
+import { writeEnvVariables } from "../services/envWriterService";
 
 interface UseEnvWriterOptions {
   onError?: (error: string) => void;
 }
 
+/**
+ * Hook for writing environment variables to .env file
+ *
+ * Uses the dev-only API endpoint to write VITE_ prefixed environment variables.
+ * This is part of the app code modification feature.
+ */
 export const useEnvWriter = ({ onError }: UseEnvWriterOptions = {}) => {
   const [envWritten, setEnvWritten] = useState(false);
   const [writingEnv, setWritingEnv] = useState(false);
@@ -11,21 +18,13 @@ export const useEnvWriter = ({ onError }: UseEnvWriterOptions = {}) => {
   const writeEnv = async (variables: Record<string, string>) => {
     setWritingEnv(true);
     try {
-      const response = await fetch("/api/write-env", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(variables),
-      });
+      const result = await writeEnvVariables(variables);
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
+      if (result.success) {
         setEnvWritten(true);
         return { success: true };
       } else {
-        const error = data.message || "Failed to write environment variables";
+        const error = result.error || "Failed to write environment variables";
         onError?.(error);
         return { success: false, error };
       }

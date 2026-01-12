@@ -7,8 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **CI Build Failure**: Fixed pnpm version mismatch causing `--frozen-lockfile` to fail
+  - Added `packageManager` field to `package.json` pinning pnpm to v9.15.4
+  - Updated CI workflow to read pnpm version from `package.json` instead of hardcoding
+  - Root cause: lockfile v9.0 format requires pnpm v9+, but CI was using v8
+
 ### Added
 
+- **App Code Modification Feature**: Formalized dev-only code modification capability
+  - Renamed `vite-plugin-env-writer.ts` → `vite-plugin-dev-api.ts` for clarity
+  - Extracted `envWriterService.ts` from `useEnvWriter` hook for better separation
+  - Added comprehensive documentation (`documentation/APP_CODE_MODIFICATION.md`)
+  - Documented in `ARCHITECTURE.md` as a recognized feature
+  - Feature enables UI to modify app source code and configuration files during development
+  - Used by setup wizard for environment variable writing and code cleanup
 - **Enhanced Airtable Setup**: Multi-step setup wizard with table structure validation
   - Step 0: PAT creation instructions with direct link to Airtable token creation page
   - Step 1: Credential entry (API Key, Base ID, Table ID) with helpful guidance
@@ -417,7 +431,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PKCE flow for enhanced security in Supabase client
 - Automatic `.env` file writing from setup wizard (dev mode only)
 - Support for Supabase publishable keys (backward compatible with anon keys)
-- Vite plugin for writing environment variables (`vite-plugin-env-writer.ts`)
+- Vite plugin for dev-only API endpoints (`vite-plugin-dev-api.ts`)
 - "Skip Database Setup" button in setup wizard for auth-only testing
 
 ### Changed

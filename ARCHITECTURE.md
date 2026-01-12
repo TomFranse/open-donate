@@ -337,6 +337,46 @@ The boilerplate supports connecting to external APIs:
 
 Both services are optional and can be configured through the setup wizard. The services are initialized in `shared/services/` and can be used directly in feature services.
 
+## Dev-Only Code Modification Feature
+
+This boilerplate includes a **dev-only app code modification** feature that allows the UI to modify app source code and configuration files during development. This is used by the setup wizard to:
+
+- Write environment variables to `.env` file
+- Remove unused feature code after setup completion
+- Update source files to remove unused imports and routes
+- Clean up `package.json` by removing unused dependencies
+
+### Architecture
+
+The feature consists of three main components:
+
+1. **Vite Plugin** (`vite-plugin-dev-api.ts`):
+   - Provides dev-only API endpoints: `/api/write-env` and `/api/finish-setup`
+   - Only works when running Vite dev server (not in production)
+   - Located at project root (required for Vite plugin configuration)
+
+2. **Services** (`src/features/setup/services/`):
+   - `envWriterService.ts`: Handles environment variable writing API calls
+   - `setupService.ts`: Handles finish setup API calls
+
+3. **Scripts** (`scripts/finish-setup.js`):
+   - Server-side Node.js script that performs actual code modifications
+   - Removes files, updates source code, modifies `package.json`
+   - Called via `/api/finish-setup` endpoint
+
+### Security
+
+⚠️ **Important**: This feature only works in development mode. The Vite plugin endpoints are only available when running `vite dev`. In production builds, these endpoints do not exist.
+
+### Usage
+
+The feature is primarily used by the setup wizard:
+
+- **Environment Variables**: `useEnvWriter` hook calls `writeEnvVariables` service
+- **Code Cleanup**: `useSetupFinish` hook calls `finishSetup` service which triggers code modification
+
+For more details, see `documentation/APP_CODE_MODIFICATION.md`.
+
 ## Best Practices
 
 1. **Keep services pure**: Services should be pure functions, no React hooks

@@ -4,15 +4,19 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 /**
- * Vite plugin that adds dev-only API endpoints
+ * Vite plugin that adds dev-only API endpoints for app code modification
+ * 
+ * This plugin enables the UI to modify app code and configuration files:
  * - /api/write-env: Write environment variables to .env file
  * - /api/finish-setup: Finish setup and clean up unused code
+ * 
+ * Security: These endpoints only work in development mode (Vite dev server)
  */
-export function envWriterPlugin(): Plugin {
+export function devApiPlugin(): Plugin {
   return {
-    name: "env-writer",
+    name: "dev-api",
     configureServer(server) {
-      // Finish setup endpoint
+      // Finish setup endpoint - modifies app source code
       server.middlewares.use("/api/finish-setup", async (req, res, next) => {
         // Only allow POST requests
         if (req.method !== "POST") {
@@ -66,7 +70,7 @@ export function envWriterPlugin(): Plugin {
         });
       });
 
-      // Write env endpoint
+      // Write env endpoint - modifies .env file
       server.middlewares.use("/api/write-env", (req, res, next) => {
         // Only allow POST requests
         if (req.method !== "POST") {
@@ -176,4 +180,3 @@ export function envWriterPlugin(): Plugin {
     },
   };
 }
-
