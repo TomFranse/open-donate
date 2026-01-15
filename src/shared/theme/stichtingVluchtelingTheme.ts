@@ -242,6 +242,10 @@ export const stichtingVluchtelingThemeOptions: ThemeOptions = {
           minHeight: "100vh",
           WebkitFontSmoothing: "antialiased",
           MozOsxFontSmoothing: "grayscale",
+          overflowX: "hidden", // Prevent horizontal scroll
+        },
+        html: {
+          overflowX: "hidden", // Prevent horizontal scroll
         },
       },
     },

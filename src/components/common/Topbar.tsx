@@ -1,32 +1,40 @@
-import { Link, useLocation } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { Link } from "react-router-dom";
+import { AppBar, Toolbar, Button, Box } from "@mui/material";
 import { ProfileMenu } from "@/components/common/ProfileMenu";
+import logoImage from "@/assets/SV_Logo2015_ZW-1024x630.png";
 
 /**
  * Topbar component that is always visible.
  * This component is designed to be reusable across all apps.
+ * Note: Currently hidden in App.tsx for donation page
  */
 export const Topbar = () => {
-  const location = useLocation();
-
   return (
     <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <Box
-            component={Link}
-            to="/"
-            sx={{
-              color: location.pathname === "/" ? "primary.main" : "inherit",
+        <Box
+          component={Link}
+          to="/"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            textDecoration: "none",
+            flexGrow: 1,
+            "&:hover": {
               textDecoration: "none",
-              "&:hover": {
-                textDecoration: "none",
-              },
+            },
+          }}
+        >
+          <Box
+            component="img"
+            src={logoImage}
+            alt="Stichting Vluchteling"
+            sx={{
+              height: 40,
+              width: "auto",
             }}
-          >
-            Vite MUI Supabase Starter
-          </Box>
-        </Typography>
+          />
+        </Box>
 
         {/* Navigation buttons */}
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>

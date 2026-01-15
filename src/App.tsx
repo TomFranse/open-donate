@@ -1,29 +1,20 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { AuthProvider } from "@/shared/context/AuthContext";
-import { Topbar } from "@/components/common/Topbar";
 import { MainLayout } from "@/layouts/MainLayout/MainLayout";
 import { HomePage } from "@pages/HomePage";
-import { SetupPage } from "@pages/SetupPage";
 import { AuthCallbackPage } from "@pages/AuthCallbackPage";
 
 function AppContent() {
-  const theme = useTheme();
-
   return (
     <>
-      <Topbar />
-      <Box
-        sx={{
-          pt: `${theme.mixins.toolbar.minHeight}px`,
-        }}
-      >
+      {/* Topbar is hidden for donation page */}
+      <Box>
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
           </Route>
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
-          <Route path="/setup" element={<SetupPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Box>

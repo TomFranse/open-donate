@@ -22,6 +22,10 @@ src/
 │   │   ├── hooks/       # React hooks for feature logic
 │   │   ├── services/    # Pure functions, API calls
 │   │   └── types/       # TypeScript types for feature
+│   ├── donation/
+│   │   ├── components/  # Donation form UI components
+│   │   ├── hooks/       # Donation form state management hooks
+│   │   └── types/       # Donation form types
 │   ├── setup/
 │   │   ├── components/  # Setup wizard UI components
 │   │   │   └── sections/ # Setup section components

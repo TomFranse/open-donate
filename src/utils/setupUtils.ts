@@ -1,5 +1,10 @@
-export type SetupSectionId = "supabase" | "airtable" | "hosting" | "theme";
+/**
+ * Setup utilities for managing setup state in localStorage
+ */
+
 export type SetupStatus = "not-started" | "in-progress" | "completed" | "skipped";
+
+export type SetupSectionId = "supabase" | "airtable" | "hosting" | "theme";
 
 export interface SetupSectionsState {
   supabase: SetupStatus;
@@ -8,7 +13,8 @@ export interface SetupSectionsState {
   theme: SetupStatus;
 }
 
-const SETUP_SECTIONS_STORAGE_KEY = "setup_sections_state";
+const STORAGE_KEY = "setup_sections_state";
+
 const DEFAULT_STATE: SetupSectionsState = {
   supabase: "not-started",
   airtable: "not-started",
@@ -17,41 +23,34 @@ const DEFAULT_STATE: SetupSectionsState = {
 };
 
 /**
- * Get setup sections state from localStorage
+ * Get the current setup sections state from localStorage
  */
 export const getSetupSectionsState = (): SetupSectionsState => {
-  try {
-    const stored = localStorage.getItem(SETUP_SECTIONS_STORAGE_KEY);
-    if (stored) {
-      return JSON.parse(stored) as SetupSectionsState;
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return DEFAULT_STATE;
     }
-  } catch {
-    // Silently fail and return default
   }
-  return { ...DEFAULT_STATE };
+  return DEFAULT_STATE;
 };
 
 /**
- * Update a specific section's status
- *
- * Note: This function does NOT automatically sync to app.config.json.
- * Call syncConfiguration() separately after making changes if needed.
+ * Update the status of a specific setup section
  */
-export const updateSetupSectionStatus = (sectionId: SetupSectionId, status: SetupStatus): void => {
+export const updateSetupSectionStatus = (section: SetupSectionId, status: SetupStatus): void => {
   const currentState = getSetupSectionsState();
-  const newState: SetupSectionsState = {
+  const newState = {
     ...currentState,
-    [sectionId]: status,
+    [section]: status,
   };
-  try {
-    localStorage.setItem(SETUP_SECTIONS_STORAGE_KEY, JSON.stringify(newState));
-  } catch {
-    // Silently fail - storage quota may be exceeded
-  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
 };
 
 /**
- * Get which features were enabled (completed)
+ * Get list of enabled features (sections marked as completed)
  */
 export const getEnabledFeatures = (): SetupSectionId[] => {
   const state = getSetupSectionsState();
@@ -59,49 +58,9 @@ export const getEnabledFeatures = (): SetupSectionId[] => {
 };
 
 /**
- * Check if setup is marked as complete in localStorage (backward compatibility)
+ * Check if setup is complete (all sections are either completed or skipped)
  */
 export const isSetupComplete = (): boolean => {
-  return localStorage.getItem("setup_complete") === "true";
-};
-
-/**
- * Check if Supabase setup was skipped (backward compatibility)
- */
-export const isSupabaseSkipped = (): boolean => {
   const state = getSetupSectionsState();
-  return state.supabase === "skipped";
-};
-
-/**
- * Mark Supabase setup as skipped (backward compatibility)
- */
-export const skipSupabaseSetup = (): void => {
-  updateSetupSectionStatus("supabase", "skipped");
-};
-
-/**
- * Check if setup wizard should be shown
- * Always returns false - allow app access anytime
- */
-export const shouldShowSetup = (): boolean => {
-  return false;
-};
-
-/**
- * Reset Airtable setup status (useful for testing/development)
- */
-export const resetAirtableSetup = (): void => {
-  updateSetupSectionStatus("airtable", "not-started");
-};
-
-/**
- * Reset all setup sections to not-started (useful for testing/development)
- */
-export const resetAllSetupSections = (): void => {
-  try {
-    localStorage.removeItem(SETUP_SECTIONS_STORAGE_KEY);
-  } catch {
-    // Silently fail
-  }
+  return Object.values(state).every((status) => status === "completed" || status === "skipped");
 };

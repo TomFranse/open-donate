@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2026-01-15]
+
+### Added
+
+- **Donation Form Feature**: Complete donation form implementation for Stichting Vluchteling
+  - Created donation feature module with components, hooks, and types
+  - Implemented donation form with frequency selection (Eenmalig, Maandelijks, Jaarlijks)
+  - Added amount selector with preset amounts (€6, €10, €15) and custom amount option
+  - Created personal details section with gender, name, email, phone, and email preferences
+  - Form data automatically saved to localStorage as JSON
+  - Added step indicator for multi-step form navigation
+  - Created dynamic donation info box showing impact message based on selected amount
+  - Implemented CTA section with logo and "GEEF WAT JE KUNT" heading
+  - Added vertical image component that displays on wide screens (desktop)
+  - Created responsive layout with form on left (50%) and vertical image on right (50%) on desktop
+  - Added assets: Stichting Vluchteling logo, Ethiopia drought image, and Syria refugee image
+
+### Changed
+
+- **HomePage**: Completely redesigned to match Stichting Vluchteling donation page
+  - Removed default welcome content
+  - Implemented two-column layout (form + vertical image) on desktop
+  - Full-width layout on mobile with vertical image hidden
+  - Removed topbar for cleaner donation page experience
+  - Updated padding to use MUI standard responsive spacing
+
+- **Theme**: Added overflow-x hidden to body and html to prevent horizontal scrolling
+
 ### Removed
 
 - **School Account Sign-In**: Removed Entreefederatie (school account) authentication option
@@ -15,6 +43,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed Entreefederatie-related props and handlers from ProfileMenu components
   - Updated tests to remove Entreefederatie references
   - Sign-in menu now only shows "Sign In with Google" option
+
+- **SetupPage**: Removed standalone setup page (setup functionality moved to dialog-based approach)
+
+### Fixed
+
+- **setupUtils**: Recreated missing setupUtils.ts file with required functions for setup feature
+  - Added `getSetupSectionsState`, `updateSetupSectionStatus`, `getEnabledFeatures`, `isSetupComplete`
+  - Added `SetupStatus` and `SetupSectionId` types
 
 ## [2026-01-15]
 
