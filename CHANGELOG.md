@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2026-01-15]
+
+### Added
+
+- **GitHub Pages Deployment**: Configured automatic deployment to GitHub Pages
+  - Added deployment job to CI workflow that builds and deploys on pushes to `main` and `develop` branches
+  - Configured Vite base path (`/open-donate/`) for GitHub Pages compatibility
+  - Deployment runs automatically after successful CI tests
+
+### Changed
+
+- **CI Workflow**: Updated test command to use `test:run` instead of `test` for proper CI execution
+  - Prevents watch mode in CI environment
+  - Ensures tests complete properly in GitHub Actions
+
+### Removed
+
+- **Temporary Files**: Removed temporary planning document (`temp_job_airtable_improved_setup.md`)
+
 ## [2026-01-12]
 
 ### Changed

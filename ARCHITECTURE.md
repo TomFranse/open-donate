@@ -438,6 +438,26 @@ For more details, see:
 7. Write tests: src/features/notes/services/__tests__/notesService.test.ts
 ```
 
+## Deployment
+
+### GitHub Pages
+
+The project is configured for automatic deployment to GitHub Pages:
+
+- **Base Path**: Configured in `vite.config.ts` as `/open-donate/` for production builds
+- **Deployment**: Automatic via GitHub Actions on pushes to `main` and `develop` branches
+- **Workflow**: `.github/workflows/ci.yml` includes a deployment job that:
+  - Builds the application
+  - Uploads the build artifact
+  - Deploys to GitHub Pages using GitHub Actions
+
+**Setup Requirements:**
+1. Enable GitHub Pages in repository settings (Settings → Pages)
+2. Select "GitHub Actions" as the source (not "Deploy from a branch")
+3. The app will be available at `https://[username].github.io/open-donate/`
+
+**Note**: The base path configuration ensures that all routes and assets work correctly with GitHub Pages' subdirectory structure.
+
 ## Questions?
 
 If you're unsure where to put code:
