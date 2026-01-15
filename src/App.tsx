@@ -4,6 +4,7 @@ import { AuthProvider } from "@/shared/context/AuthContext";
 import { MainLayout } from "@/layouts/MainLayout/MainLayout";
 import { HomePage } from "@pages/HomePage";
 import { AuthCallbackPage } from "@pages/AuthCallbackPage";
+import { getBasePathForRouter } from "@/shared/utils/basePath";
 
 function AppContent() {
   return (
@@ -25,7 +26,7 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={getBasePathForRouter()}>
         <AppContent />
       </BrowserRouter>
     </AuthProvider>

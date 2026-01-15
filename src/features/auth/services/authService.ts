@@ -1,6 +1,7 @@
 import { getSupabase, isSupabaseConfigured } from "@shared/services/supabaseService";
 import type { User, LoginCredentials, SignUpCredentials } from "../types/auth.types";
 import { supabaseUserToUser } from "@/shared/utils/userUtils";
+import { getFullUrl } from "@/shared/utils/basePath";
 
 export const login = async (
   credentials: LoginCredentials
@@ -131,7 +132,8 @@ export const signInWithGoogle = async (): Promise<{ error: Error | null }> => {
   try {
     // Clean URL hash before OAuth to prevent double-hash issue
     // Redirect to callback page which will handle the code exchange
-    const redirectUrl = `${window.location.origin}/auth/callback`;
+    // Use getFullUrl to include the base path for GitHub Pages
+    const redirectUrl = getFullUrl("/auth/callback");
 
     const { error: signInError } = await getSupabase().auth.signInWithOAuth({
       provider: "google",

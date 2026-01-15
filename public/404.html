@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting...</title>
+    <script>
+      // GitHub Pages 404.html handler for SPA routing
+      // This file is served when a route doesn't exist as a physical file
+      // Redirect to the base path - React Router will handle client-side routing
+      
+      const basePath = '/open-donate/';
+      const currentPath = window.location.pathname;
+      
+      // Always redirect to the base path to ensure we're in the correct location
+      // React Router with basename configured will handle the routing
+      if (!currentPath.startsWith(basePath)) {
+        window.location.replace(basePath);
+      } else {
+        // We're already at the base path or a sub-route
+        // Redirect to index.html so the app loads
+        window.location.replace(basePath + 'index.html' + window.location.search + window.location.hash);
+      }
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
+</html>

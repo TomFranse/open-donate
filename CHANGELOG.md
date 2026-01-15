@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2026-01-15]
 
+### Fixed
+
+- **GitHub Pages Routing**: Fixed routing issues when deploying to GitHub Pages subdirectory
+  - Added `basename` prop to React Router's `BrowserRouter` to handle `/open-donate/` base path
+  - Created `basePath.ts` utility module for consistent base path handling across the app
+  - Fixed OAuth redirect URLs to include base path (`/open-donate/auth/callback`)
+  - Added `404.html` file to handle GitHub Pages 404s and redirect to the app
+  - App now correctly stays within `/open-donate/` path when refreshing or navigating
+  - Prevents redirects to generic GitHub Pages root URL
+
+## [2026-01-15]
+
 ### Added
 
 - **Donation Form Feature**: Complete donation form implementation for Stichting Vluchteling

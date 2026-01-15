@@ -463,6 +463,12 @@ The project is configured for automatic deployment to GitHub Pages:
 
 **Note**: The base path configuration ensures that all routes and assets work correctly with GitHub Pages' subdirectory structure.
 
+**Routing Configuration:**
+- React Router is configured with `basename="/open-donate"` in production (via `getBasePathForRouter()`)
+- Base path utilities are available in `src/shared/utils/basePath.ts` for constructing URLs
+- OAuth redirects automatically include the base path
+- A `404.html` file handles GitHub Pages 404s and redirects to the app
+
 ## Questions?
 
 If you're unsure where to put code:
