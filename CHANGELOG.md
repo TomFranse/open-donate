@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- **School Account Sign-In**: Removed Entreefederatie (school account) authentication option
+  - Removed "Login met schoolaccount" menu item from ProfileMenu
+  - Removed `signInWithEntreefederatie` function from auth service and hooks
+  - Removed Entreefederatie-related props and handlers from ProfileMenu components
+  - Updated tests to remove Entreefederatie references
+  - Sign-in menu now only shows "Sign In with Google" option
+
+## [2026-01-15]
+
+### Added
+
+- **Stichting Vluchteling Theme**: Created custom theme matching Stichting Vluchteling brand
+  - Added `stichtingVluchtelingTheme.ts` with brand colors (yellow #FDC93F, grey #6B6B6B)
+  - Theme uses Roboto Condensed font as alternative to Berthold Extra Condensed
+  - Updated theme loader to use Stichting Vluchteling theme as default instead of default theme
+
+### Changed
+
+- **Theme Styling**: Updated Stichting Vluchteling theme to match website design
+  - Removed rounded corners from buttons (borderRadius: 0)
+  - Removed rounded corners from cards and paper components
+  - Fixed color contrast issues (black text on yellow, white text on grey)
+  - Changed outlined buttons to grey background with white text (matching footer style)
+  - Updated fonts from Montserrat to Roboto Condensed throughout
+  - Updated Google Fonts import in index.html to load Roboto Condensed
+
 ## [2026-01-15]
 
 ### Added

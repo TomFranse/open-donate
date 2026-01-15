@@ -2,7 +2,7 @@
  * Theme Module - Main Entry Point
  *
  * This module exports the active theme instance and theme management utilities.
- * The theme is loaded from localStorage if a custom theme exists, otherwise uses the default theme.
+ * The theme is loaded from localStorage if a custom theme exists, otherwise uses the Stichting Vluchteling theme.
  *
  * Usage:
  * ```tsx
@@ -17,13 +17,13 @@
  * Theme Management:
  * - getCustomTheme(): Get custom theme from localStorage
  * - saveCustomTheme(options): Save custom theme to localStorage
- * - removeCustomTheme(): Remove custom theme (revert to default)
+ * - removeCustomTheme(): Remove custom theme (revert to Stichting Vluchteling theme)
  * - validateThemeOptions(json): Validate theme JSON string
  */
 
 import { loadTheme } from "./themeLoader";
 
-// Export the loaded theme (custom if available, otherwise default)
+// Export the loaded theme (custom if available, otherwise Stichting Vluchteling theme)
 export const theme = loadTheme();
 
 // Re-export utilities for theme management
@@ -34,3 +34,7 @@ export {
   validateThemeOptions,
 } from "./themeLoader";
 export { defaultTheme, defaultThemeOptions } from "./defaultTheme";
+export {
+  stichtingVluchtelingTheme,
+  stichtingVluchtelingThemeOptions,
+} from "./stichtingVluchtelingTheme";

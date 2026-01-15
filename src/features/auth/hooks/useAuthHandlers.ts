@@ -53,16 +53,10 @@ export const useAuthHandlers = ({ setUser, setLoading, setError }: UseAuthHandle
     "Failed to sign in with Google"
   );
 
-  const handleSignInWithEntreefederatie = createSignInHandler(
-    authService.signInWithEntreefederatie,
-    "Failed to sign in with Entreefederatie"
-  );
-
   return {
     login: handleLogin,
     signUp: handleSignUp,
     logout: handleLogout,
     signInWithGoogle: handleSignInWithGoogle,
-    signInWithEntreefederatie: handleSignInWithEntreefederatie,
   };
 };

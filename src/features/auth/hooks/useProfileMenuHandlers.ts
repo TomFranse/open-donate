@@ -6,17 +6,12 @@ interface UseProfileMenuHandlersProps {
 }
 
 export const useProfileMenuHandlers = ({ onClose }: UseProfileMenuHandlersProps) => {
-  const { signInWithGoogle, signInWithEntreefederatie, logout } = useAuthContext();
+  const { signInWithGoogle, logout } = useAuthContext();
 
   const handleSignIn = useCallback(() => {
     void signInWithGoogle();
     onClose();
   }, [signInWithGoogle, onClose]);
-
-  const handleSignInEntreefederatie = useCallback(() => {
-    void signInWithEntreefederatie();
-    onClose();
-  }, [signInWithEntreefederatie, onClose]);
 
   const handleSignOut = useCallback(async () => {
     onClose();
@@ -25,7 +20,6 @@ export const useProfileMenuHandlers = ({ onClose }: UseProfileMenuHandlersProps)
 
   return {
     handleSignIn,
-    handleSignInEntreefederatie,
     handleSignOut,
   };
 };

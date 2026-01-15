@@ -2,22 +2,22 @@
  * Theme Loader - Theme Persistence and Loading
  *
  * Handles loading themes from localStorage and provides utilities for theme management.
- * Supports custom themes that override the default theme configuration.
+ * Supports custom themes that override the Stichting Vluchteling theme configuration.
  *
  * Storage:
  * - Custom themes are stored in localStorage under the key "custom_mui_theme"
  * - Themes are stored as JSON strings
  *
  * Functions:
- * - loadTheme(): Loads custom theme from localStorage or returns default theme
+ * - loadTheme(): Loads custom theme from localStorage or returns Stichting Vluchteling theme
  * - getCustomTheme(): Retrieves custom theme from localStorage
  * - saveCustomTheme(options): Saves custom theme to localStorage
- * - removeCustomTheme(): Removes custom theme and reverts to default
+ * - removeCustomTheme(): Removes custom theme and reverts to Stichting Vluchteling theme
  * - validateThemeOptions(json): Validates theme JSON and returns validation result
  */
 
 import { createTheme, ThemeOptions } from "@mui/material/styles";
-import { defaultThemeOptions } from "./defaultTheme";
+import { stichtingVluchtelingThemeOptions } from "./stichtingVluchtelingTheme";
 
 const CUSTOM_THEME_STORAGE_KEY = "custom_mui_theme";
 
@@ -32,7 +32,7 @@ export const getCustomTheme = (): ThemeOptions | null => {
       return JSON.parse(stored) as ThemeOptions;
     }
   } catch {
-    // Silently fail and return null to use default theme
+    // Silently fail and return null to use Stichting Vluchteling theme
   }
   return null;
 };
@@ -53,7 +53,7 @@ export const saveCustomTheme = (themeOptions: ThemeOptions): void => {
 };
 
 /**
- * Remove custom theme (revert to default)
+ * Remove custom theme (revert to Stichting Vluchteling theme)
  *
  * Note: This function does NOT automatically sync to app.config.json.
  * Call syncConfiguration() separately after removing theme if needed.
@@ -63,7 +63,7 @@ export const removeCustomTheme = (): void => {
 };
 
 /**
- * Load theme - custom theme if available, otherwise default
+ * Load theme - custom theme if available, otherwise Stichting Vluchteling theme
  * @returns Created MUI theme instance
  */
 export const loadTheme = () => {
@@ -71,7 +71,8 @@ export const loadTheme = () => {
   if (customTheme) {
     return createTheme(customTheme);
   }
-  return createTheme(defaultThemeOptions);
+  // Use Stichting Vluchteling theme instead of default theme
+  return createTheme(stichtingVluchtelingThemeOptions);
 };
 
 /**

@@ -13,7 +13,6 @@ interface UseAuthReturn {
   signUp: (credentials: SignUpCredentials) => Promise<void>;
   logout: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
-  signInWithEntreefederatie: () => Promise<void>;
 }
 
 export const useAuth = (): UseAuthReturn => {

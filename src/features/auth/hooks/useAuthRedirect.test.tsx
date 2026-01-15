@@ -8,9 +8,6 @@ import * as redirectUtils from "@/utils/redirectUtils";
 // Mock dependencies
 vi.mock("@/shared/context/AuthContext");
 vi.mock("@/utils/redirectUtils");
-vi.mock("@config/entreefederatie", () => ({
-  getEntreefederatieDomain: vi.fn(() => "example.com"),
-}));
 
 const mockNavigate = vi.fn();
 
@@ -31,7 +28,6 @@ describe("useAuthRedirect", () => {
     signUp: vi.fn(),
     logout: vi.fn(),
     signInWithGoogle: vi.fn(),
-    signInWithEntreefederatie: vi.fn(),
   };
 
   beforeEach(() => {

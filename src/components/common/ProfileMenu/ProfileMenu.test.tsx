@@ -13,7 +13,6 @@ vi.mock("@features/auth/hooks/useUserProfile");
 vi.mock("@shared/services/supabaseService");
 
 const mockSignInWithGoogle = vi.fn();
-const mockSignInWithEntreefederatie = vi.fn();
 const mockLogout = vi.fn();
 
 describe("ProfileMenu", () => {
@@ -25,7 +24,6 @@ describe("ProfileMenu", () => {
     signUp: vi.fn(),
     logout: mockLogout,
     signInWithGoogle: mockSignInWithGoogle,
-    signInWithEntreefederatie: mockSignInWithEntreefederatie,
   };
 
   const defaultUserProfile = {
@@ -136,23 +134,6 @@ describe("ProfileMenu", () => {
       await user.click(signInButton);
 
       expect(mockSignInWithGoogle).toHaveBeenCalled();
-    });
-
-    it("should call signInWithEntreefederatie when Entreefederatie sign-in is clicked", async () => {
-      const user = userEvent.setup();
-      render(<ProfileMenu />);
-
-      const triggerButton = screen.getByRole("button");
-      await user.click(triggerButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/login met schoolaccount/i)).toBeInTheDocument();
-      });
-
-      const signInButton = screen.getByText(/login met schoolaccount/i);
-      await user.click(signInButton);
-
-      expect(mockSignInWithEntreefederatie).toHaveBeenCalled();
     });
   });
 

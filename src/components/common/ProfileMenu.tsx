@@ -30,7 +30,7 @@ export const ProfileMenu = ({
     externalOnClose,
   });
 
-  const { handleSignIn, handleSignInEntreefederatie, handleSignOut } = useProfileMenuHandlers({
+  const { handleSignIn, handleSignOut } = useProfileMenuHandlers({
     onClose: handleClose,
   });
 
@@ -42,9 +42,7 @@ export const ProfileMenu = ({
       profile={profile}
       profileLoading={profileLoading}
       onSignInWithGoogle={handleSignIn}
-      onSignInWithEntreefederatie={handleSignInEntreefederatie}
       onSignOut={handleSignOut}
-      entreefederatieEnabled={true}
     />
   );
 

@@ -36,7 +36,7 @@ export const Card = ({
         flexDirection: "column",
         maxWidth: 400,
         width: "100%",
-        borderRadius: 4,
+        // borderRadius handled by theme (0 for square corners)
         transition: "box-shadow 0.2s ease-in-out",
         "& .MuiCardHeader-root": {
           padding: 3,

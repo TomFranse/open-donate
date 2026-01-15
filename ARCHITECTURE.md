@@ -37,9 +37,10 @@ src/
 │   ├── types/           # Shared types
 │   ├── utils/           # Shared utility functions
 │   └── theme/           # MUI theme configuration
-│       ├── defaultTheme.ts    # Default theme (preserved)
-│       ├── themeLoader.ts      # Theme loading and persistence
-│       └── theme.ts            # Theme export (uses loader)
+│       ├── defaultTheme.ts              # Default theme (preserved)
+│       ├── stichtingVluchtelingTheme.ts  # Stichting Vluchteling theme
+│       ├── themeLoader.ts                # Theme loading and persistence
+│       └── theme.ts                      # Theme export (uses loader)
 └── utils/               # Utility functions
 ```
 

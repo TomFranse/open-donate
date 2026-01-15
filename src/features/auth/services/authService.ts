@@ -1,5 +1,4 @@
 import { getSupabase, isSupabaseConfigured } from "@shared/services/supabaseService";
-import { getEntreefederatieDomain } from "@config/entreefederatie";
 import type { User, LoginCredentials, SignUpCredentials } from "../types/auth.types";
 import { supabaseUserToUser } from "@/shared/utils/userUtils";
 
@@ -150,47 +149,6 @@ export const signInWithGoogle = async (): Promise<{ error: Error | null }> => {
   } catch (error) {
     return {
       error: error instanceof Error ? error : new Error("Failed to sign in with Google"),
-    };
-  }
-};
-
-/**
- * Sign in with Entreefederatie SAML SSO
- */
-export const signInWithEntreefederatie = async (): Promise<{ error: Error | null }> => {
-  if (!isSupabaseConfigured()) {
-    return {
-      error: new Error(
-        "Authentication requires Supabase to be configured. Please set up Supabase in the setup wizard."
-      ),
-    };
-  }
-
-  try {
-    // Redirect to callback page which will handle the code exchange
-    const redirectUrl = `${window.location.origin}/auth/callback`;
-
-    const { data, error: ssoError } = await getSupabase().auth.signInWithSSO({
-      domain: getEntreefederatieDomain(),
-      options: {
-        redirectTo: redirectUrl,
-      },
-    });
-
-    if (ssoError) {
-      return { error: ssoError };
-    }
-
-    if (data?.url) {
-      // Redirect to Entreefederatie SAML endpoint
-      window.location.href = data.url;
-      return { error: null };
-    } else {
-      return { error: new Error("No redirect URL returned from SAML SSO") };
-    }
-  } catch (error) {
-    return {
-      error: error instanceof Error ? error : new Error("Failed to sign in with Entreefederatie"),
     };
   }
 };
