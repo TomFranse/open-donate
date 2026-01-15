@@ -81,20 +81,20 @@ export const stichtingVluchtelingThemeOptions: ThemeOptions = {
     },
   },
   typography: {
-    // Using Roboto Condensed as a free alternative to Berthold Extra Condensed
-    // Similar condensed, modern sans-serif style
+    // Using Roboto Condensed as fallback for body text
+    // Block Berthold Regular is used for large headings (h1, h2, h3) only
     fontFamily: '"Roboto Condensed", "Roboto", sans-serif',
     h1: {
-      fontFamily: '"Roboto Condensed", "Roboto", sans-serif',
-      fontWeight: 700,
+      fontFamily: '"Block Berthold Regular", "Roboto Condensed", "Roboto", sans-serif',
+      fontWeight: 400,
     },
     h2: {
-      fontFamily: '"Roboto Condensed", "Roboto", sans-serif',
-      fontWeight: 700,
+      fontFamily: '"Block Berthold Regular", "Roboto Condensed", "Roboto", sans-serif',
+      fontWeight: 400,
     },
     h3: {
-      fontFamily: '"Roboto Condensed", "Roboto", sans-serif',
-      fontWeight: 700,
+      fontFamily: '"Block Berthold Regular", "Roboto Condensed", "Roboto", sans-serif',
+      fontWeight: 400,
     },
     h4: {
       fontFamily: '"Roboto Condensed", "Roboto", sans-serif',

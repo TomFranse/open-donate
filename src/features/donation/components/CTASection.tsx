@@ -43,7 +43,6 @@ export const CTASection = () => {
               variant="h3"
               component="h1"
               sx={{
-                fontWeight: 700,
                 textTransform: "uppercase",
                 mb: 2,
               }}

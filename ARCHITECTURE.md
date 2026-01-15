@@ -42,6 +42,7 @@ src/
 │   ├── utils/           # Shared utility functions
 │   └── theme/           # MUI theme configuration
 │       ├── defaultTheme.ts              # Default theme (preserved)
+│       ├── fonts.css                    # Custom font definitions (@font-face)
 │       ├── stichtingVluchtelingTheme.ts  # Stichting Vluchteling theme
 │       ├── themeLoader.ts                # Theme loading and persistence
 │       └── theme.ts                      # Theme export (uses loader)

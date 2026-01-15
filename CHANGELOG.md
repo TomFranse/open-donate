@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2026-01-15]
 
+### Added
+
+- **Block Berthold Regular Font**: Added custom font for large headings
+  - Created `fonts.css` with @font-face declaration for Block Berthold Regular
+  - Configured h1, h2, and h3 headings to use Block Berthold Regular font
+  - Font file added to `src/assets/` directory
+  - Smaller headings (h4, h5, h6) continue using Roboto Condensed
+
 ### Fixed
 
 - **GitHub Pages Routing**: Fixed routing issues when deploying to GitHub Pages subdirectory
