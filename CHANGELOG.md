@@ -11,11 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Block Berthold Regular Font**: Added custom font for large headings
-  - Created `fonts.css` with @font-face declaration for Block Berthold Regular
+- **Block Berthold Regular Font**: Added custom font for large headings using enterprise best practices
+  - Created `public/fonts/` directory for self-hosted fonts (standard React/Vite approach)
+  - Added font preloading in `index.html` for faster font discovery
+  - Inline `@font-face` declaration in HTML head (enterprise best practice)
   - Configured h1, h2, and h3 headings to use Block Berthold Regular font
-  - Font file added to `src/assets/` directory
   - Smaller headings (h4, h5, h6) continue using Roboto Condensed
+  - Updated project structure rules to allow font files (.ttf, .woff, .woff2, .otf, .eot) in `public/fonts/`
 
 ### Fixed
 

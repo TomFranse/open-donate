@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { theme } from "@shared/theme/theme";
-import "@shared/theme/fonts.css";
 import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(

@@ -10,6 +10,24 @@
       href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
+    <!-- Preload Block Berthold Regular font for critical headings -->
+    <link
+      rel="preload"
+      href="/fonts/Block Berthold Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
+    />
+    <!-- Inline @font-face for Block Berthold Regular (enterprise best practice) -->
+    <style>
+      @font-face {
+        font-family: 'Block Berthold Regular';
+        src: url('/fonts/Block Berthold Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
     <title>vite-mui-supabase-starter</title>
   </head>
   <body>

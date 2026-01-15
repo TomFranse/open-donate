@@ -275,11 +275,7 @@ module.exports = {
             },
             {
               name: "theme",
-              children: [
-                { name: "*.ts" },
-                { name: "*.css" }, // CSS files for font definitions
-                { name: "index.ts" },
-              ],
+              children: [{ name: "*.ts" }, { name: "index.ts" }],
             },
             { name: "constants.ts" },
           ],
@@ -374,10 +370,6 @@ module.exports = {
             { name: "*.jpeg" },
             { name: "*.gif" },
             { name: "*.ico" },
-            { name: "*.ttf" }, // TrueType font files
-            { name: "*.woff" }, // Web Open Font Format files
-            { name: "*.woff2" }, // Web Open Font Format 2 files
-            { name: "*.otf" }, // OpenType font files
           ],
         },
         // Root src files
@@ -403,6 +395,16 @@ module.exports = {
         { name: "*.txt" },
         { name: "*.json" },
         { name: "*.ico" },
+        {
+          name: "fonts",
+          children: [
+            { name: "*.ttf" }, // TrueType font files
+            { name: "*.woff" }, // Web Open Font Format files
+            { name: "*.woff2" }, // Web Open Font Format 2 files (preferred)
+            { name: "*.otf" }, // OpenType font files
+            { name: "*.eot" }, // Embedded OpenType (legacy IE)
+          ],
+        },
         {
           name: "documentation",
           children: [{ name: "*.md" }],
